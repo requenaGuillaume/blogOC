@@ -6,9 +6,9 @@ use App\Core\Router;
 
 require_once 'vendor/autoload.php';
 
-class Kernel
+final class Kernel
 {
-    public function process()
+    public function process(): void
     {
         $router = new Router();
         $router->route();

@@ -4,7 +4,7 @@ namespace App\Core;
 
 require_once 'vendor/autoload.php';
 
-class Router 
+final class Router 
 {    
     private const ROUTE = [
         'homepage' => ['action' => 'Controller\HomepageController'],
