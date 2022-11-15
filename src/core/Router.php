@@ -10,7 +10,8 @@ final class Router
         'homepage' => 'Controller\HomepageController',
         'article' => 'Controller\ArticleController',
         'login' => 'Controller\LoginController',
-        'logout' => 'Controller\LogoutController'
+        'logout' => 'Controller\LogoutController',
+        'fixtures' => 'Controller\FixturesController'
     ];
 
     private const METHOD = [
