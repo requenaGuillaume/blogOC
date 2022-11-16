@@ -13,6 +13,8 @@ class PDOAbstractRepository
     protected const DB_USER = 'root';
     protected const DB_PASSWORD = '';
     
+    protected array $columns;
+
     protected ?PDO $pdo = null;
     protected string $table;
 
@@ -27,7 +29,53 @@ class PDOAbstractRepository
     {
         $query = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id = :id LIMIT 0,1");
 
-        $query->execute([':id' => $id]);
+        $query->execute([':id' => intval($id)]);
+        $result = $query->fetch();
+
+        return $result;
+    }
+
+
+    public function findAll(): array
+    {
+        $query = $this->pdo->prepare("SELECT * FROM {$this->table}");
+
+        $query->execute();
+        $results = $query->fetchAll();
+
+        return $results;
+    }
+
+
+    public function findOneBy(array $data)
+    {
+        $iteration = 1;
+        $sql = ' WHERE ';
+        $params = [];
+
+        foreach($data as $key => $value){
+            if(!in_array($key, $this->columns)){
+                // throw exception !
+                echo 'Une erreur est survenue.';
+                die;
+            }
+
+            $key = htmlspecialchars($key);
+            $value = htmlspecialchars($value); 
+
+            $sql .= "$key = :$key";
+            $params[":$key"] = $value;
+
+            if($iteration !== count($data)){
+                $sql .= ' AND ';
+            }   
+            
+            $iteration++;
+        }
+
+        $query = $this->pdo->prepare("SELECT * FROM {$this->table} $sql");
+
+        $query->execute($params);
         $result = $query->fetch();
 
         return $result;
