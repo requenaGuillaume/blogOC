@@ -12,10 +12,17 @@ class UserRepository extends PDOAbstractRepository
         echo 'test<br>';
         // $user = $this->find(1); // ok
         // $users = $this->findAll();  // ok
-        $user = $this->findOneBy([
-            'mail' => 'testUser@symfony.com',
-            'pseudo' => 'testUser'
-        ]); // ok then => TODO add LIMIT
+
+        // $user = $this->findOneBy([
+        //     'mail' => 'testUser@symfony.com',
+        //     'pseudo' => 'testUser'
+        // ]); // ok
+
+        $user = $this->findBy(data: [
+            'pseudo' => 'testUser',
+            'role' => 'user'
+        ], limit: 5, offset: 0); // ok => TODO the ORDER BY array $orderByCriteria
+
         var_dump($user);
     }
 }

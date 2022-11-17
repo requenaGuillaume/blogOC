@@ -49,8 +49,44 @@ class PDOAbstractRepository
 
     public function findOneBy(array $data)
     {
+        extract($this->getSql($data));
+
+        $query = $this->pdo->prepare("SELECT * FROM {$this->table} $sql");
+
+        $query->execute($params);
+        $result = $query->fetch();
+
+        return $result;
+    }
+
+
+    public function findBy(array $data, ?array $orderByCriteria = null, ?int $limit = null, ?int $offset = null)
+    {
+        extract($this->getSql($data));
+
+        // TODO : $orderByCriteria, before $limit
+
+        if($limit){
+            $sql .= ' LIMIT '.intval($limit);
+        }
+
+        if($offset){
+            $sql .= ' OFFSET '.intval($offset);
+        }
+
+        $query = $this->pdo->prepare("SELECT * FROM {$this->table} $sql");
+
+        $query->execute($params);
+        $result = $query->fetchAll();
+
+        return $result;
+    }
+
+
+    protected function getSql(array $data): array
+    {
         $iteration = 1;
-        $sql = ' WHERE ';
+        $sql = 'WHERE ';
         $params = [];
 
         foreach($data as $key => $value){
@@ -73,13 +109,8 @@ class PDOAbstractRepository
             $iteration++;
         }
 
-        $query = $this->pdo->prepare("SELECT * FROM {$this->table} $sql");
-
-        $query->execute($params);
-        $result = $query->fetch();
-
-        return $result;
-    }
+        return compact('sql', 'params');
+    }   
 
 
     protected function getPdo(): PDO
