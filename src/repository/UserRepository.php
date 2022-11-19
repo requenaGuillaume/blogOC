@@ -20,10 +20,19 @@ class UserRepository extends PDOAbstractRepository
 
         // $this->delete(7); // ok
 
+        // $user = $this->findBy(data: [
+        //     'pseudo' => 'testUser',
+        //     'role' => 'user'
+        // ], limit: 5, offset: 0); // ok
+
         $user = $this->findBy(data: [
-            'pseudo' => 'testUser',
-            'role' => 'user'
-        ], limit: 5, offset: 0); // ok => TODO the ORDER BY array $orderByCriteria
+            'pseudo' => 'testUser'            
+        ],
+        orderCriterias: [
+            'role' => 'ASC',
+            'id' => 'ASC'
+        ], 
+        limit: 5, offset: 0); // ok
 
         var_dump($user);
     }

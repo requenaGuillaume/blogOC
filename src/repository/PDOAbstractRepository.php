@@ -70,11 +70,13 @@ abstract class PDOAbstractRepository
     }
 
 
-    public function findBy(array $data, ?array $orderByCriteria = null, ?int $limit = null, ?int $offset = null)
+    public function findBy(array $data, ?array $orderCriterias = null, ?int $limit = null, ?int $offset = null)
     {
         extract($this->getSql($data));
 
-        // TODO : $orderByCriteria, before $limit
+        if($orderCriterias){
+            $sql = $this->addCriteriaToSql($orderCriterias, $sql); 
+        }
 
         if($limit){
             $sql .= ' LIMIT '.intval($limit);
@@ -120,7 +122,32 @@ abstract class PDOAbstractRepository
         }
 
         return compact('sql', 'params');
-    }   
+    }
+
+
+    protected function addCriteriaToSql(array $orderCriterias, string $sql): string
+    {
+        $iteration = 1;
+
+        foreach($orderCriterias as $key => $value){
+
+            if(in_array($key, $this->columns)){
+                $key = htmlspecialchars($key);
+                $value = htmlspecialchars($value);
+
+                if($iteration === 1){
+                    $sql .= " ORDER BY $key $value";
+                }else{
+                    $sql .= ", $key $value";
+                }
+
+            }
+
+            $iteration++;
+        }
+        
+        return $sql;
+    }
 
 
     protected function getPdo(): PDO
