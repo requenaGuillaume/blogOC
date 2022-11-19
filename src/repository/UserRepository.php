@@ -18,6 +18,8 @@ class UserRepository extends PDOAbstractRepository
         //     'pseudo' => 'testUser'
         // ]); // ok
 
+        // $this->delete(7); // ok
+
         $user = $this->findBy(data: [
             'pseudo' => 'testUser',
             'role' => 'user'
@@ -25,4 +27,16 @@ class UserRepository extends PDOAbstractRepository
 
         var_dump($user);
     }
+
+
+    public function create(): void
+    {
+        // TODO
+    }
+
+    public function update(): void
+    {
+        // TODO
+    }
+
 }

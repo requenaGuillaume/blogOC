@@ -5,7 +5,7 @@ namespace App\Repository;
 use PDO;
 use PDOException;
 
-class PDOAbstractRepository
+abstract class PDOAbstractRepository
 {
     
     protected const DB_HOST = 'localhost';
@@ -21,7 +21,17 @@ class PDOAbstractRepository
 
     public function __construct() 
     {
-        $this->pdo = $this->getPDO();        
+        $this->pdo = $this->getPDO();
+    }
+
+
+    abstract public function create(): void;
+    abstract public function update(): void;
+
+    public function delete(int $id): void
+    {
+        $query = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = :id ");
+        $query->execute([':id' => $id]);
     }
 
     
@@ -29,7 +39,7 @@ class PDOAbstractRepository
     {
         $query = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id = :id LIMIT 0,1");
 
-        $query->execute([':id' => intval($id)]);
+        $query->execute([':id' => $id]);
         $result = $query->fetch();
 
         return $result;
