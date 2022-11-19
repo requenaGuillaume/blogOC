@@ -131,16 +131,19 @@ abstract class PDOAbstractRepository
 
         foreach($orderCriterias as $key => $value){
 
-            if(in_array($key, $this->columns)){
-                $key = htmlspecialchars($key);
-                $value = htmlspecialchars($value);
+            if(!in_array($key, $this->columns)){
+                // throw exception !
+                echo 'Une erreur est survenue.';
+                die;
+            }
 
-                if($iteration === 1){
-                    $sql .= " ORDER BY $key $value";
-                }else{
-                    $sql .= ", $key $value";
-                }
+            $key = htmlspecialchars($key);
+            $value = htmlspecialchars($value);
 
+            if($iteration === 1){
+                $sql .= " ORDER BY $key $value";
+            }else{
+                $sql .= ", $key $value";
             }
 
             $iteration++;

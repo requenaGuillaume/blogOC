@@ -9,7 +9,6 @@ class UserRepository extends PDOAbstractRepository
 
     public function run()
     {
-        echo 'test<br>';
         // $user = $this->find(1); // ok
         // $users = $this->findAll();  // ok
 
