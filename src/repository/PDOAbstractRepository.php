@@ -13,7 +13,7 @@ abstract class PDOAbstractRepository
     protected const DB_USER = 'root';
     protected const DB_PASSWORD = '';
     
-    protected array $columns;
+    // protected array $columns;
     protected array $requiredColumns;
     protected array $optionnalColumns;
 
@@ -27,75 +27,23 @@ abstract class PDOAbstractRepository
     }
 
 
-    // abstract public function create(): void;
     abstract public function update(): void;
 
-    // too much Loop ? use ternary instead of ifelse ?
+
     public function create(array $values): void
     {
-        $sql = "INSERT INTO {$this->table} (";
         $optionnalValues = array_diff_key($values, $this->requiredColumns);
-        $hasOptionnalValue = count($optionnalValues) > 0 ? true : false;
-        $params = [];
-        $iteration = 1;
 
-        foreach($this->requiredColumns as $key => $value){
-            $value1 = $values[$key];
+        $unauthorizedValues = array_diff_key($optionnalValues, $this->optionnalColumns);
 
-            if($iteration === count($this->requiredColumns)){
-                $sql .= " $key ";
-
-                if(!$hasOptionnalValue){
-                    $sql .= ')';
-                    $params[":$key"] = $value1;
-                }else{
-                    $sql .= ',';
-                    $params[":$key"] = $value1;
-                }
-            }else{
-                $sql .= " $key,";
-                $params[":$key"] = $value1;
-            }
-
-            $iteration++;
+        if(!empty($unauthorizedValues)){
+            echo 'Une erreur est survenue.';
+            die();
         }
 
-        $iteration = 1;
+        extract($this->buildQuery($values, $optionnalValues));
 
-        if($hasOptionnalValue){
-            foreach($optionnalValues as $key => $value){
-                if(!in_array($key, $this->optionnalColumns)){
-                    // Throw exception
-                    echo 'Une erreur est survenue.';
-                    die();
-                }
-
-                if($iteration !== count($optionnalValues)){
-                    $sql .= " $key,";
-                    $params[":$key"] = $value;
-                }else{
-                    $sql .= " $key )";
-                    $params[":$key"] = $value;
-                }
-
-                $iteration++;
-            }
-        }
-
-        $sql .= ' VALUES (';
-        $iteration = 1;
-
-        foreach($params as $key => $value){
-            if($iteration === count($params)){
-                $sql .= "$key)";
-            }else{
-                $sql .= "$key, ";
-            }
-
-            $iteration++;
-        }
-
-        $query = $this->pdo->prepare($sql);
+        $query = $this->pdo->prepare($finalSql);
         $query->execute($params);
     }
 
@@ -169,6 +117,94 @@ abstract class PDOAbstractRepository
 
     // ========================== PROTECTED FUNCTIONS ========================== \\
 
+    // create()
+    private function buildQuery(array $values, array $optionnalValues)
+    {
+        $sql = "INSERT INTO {$this->table} (";
+        $params = [];
+
+        $hasOptionnalValue = count($optionnalValues) > 0 ? true : false;
+
+        extract($this->beginQuery($sql, $values, $params, $hasOptionnalValue));
+        extract($this->continueQuery($sql, $params, $hasOptionnalValue, $optionnalValues));
+
+        $sql .= ' VALUES (';
+
+        $finalSql = $this->finishQuery($sql, $params);
+
+        return compact('finalSql', 'params');
+    }
+
+    private function beginQuery(string $sql, array $values, array $params, bool $hasOptionnalValue): array
+    {
+        $iteration = 1;
+
+        foreach($this->requiredColumns as $key => $value){
+            $value1 = $values[$key];
+
+            if($iteration === count($this->requiredColumns)){
+                $sql .= " $key ";
+
+                if(!$hasOptionnalValue){
+                    $sql .= ')';
+                    $params[":$key"] = $value1;
+                }else{
+                    $sql .= ',';
+                    $params[":$key"] = $value1;
+                }
+            }else{
+                $sql .= " $key,";
+                $params[":$key"] = $value1;
+            }
+
+            $iteration++;
+        }
+
+        return compact('sql', 'values', 'params', 'hasOptionnalValue');
+    }
+
+
+    private function continueQuery(string $sql, array $params, bool $hasOptionnalValue, ?array $optionnalValues = null): array
+    {
+        $iteration = 1;
+
+        if($hasOptionnalValue){
+            foreach($optionnalValues as $key => $value){
+
+                if($iteration !== count($optionnalValues)){
+                    $sql .= " $key,";
+                    $params[":$key"] = $value;
+                }else{
+                    $sql .= " $key )";
+                    $params[":$key"] = $value;
+                }
+
+                $iteration++;
+            }
+        }
+
+        return compact('sql', 'params', 'hasOptionnalValue', 'optionnalValues');
+    }
+
+    public function finishQuery(string $sql, array $params): string
+    {
+        $iteration = 1;
+
+        foreach($params as $key => $value){
+            if($iteration === count($params)){
+                $sql .= "$key)";
+            }else{
+                $sql .= "$key, ";
+            }
+
+            $iteration++;
+        }
+        
+        return $sql;
+    }
+
+
+    // findBy() & findOneBy()
     protected function getSql(array $data): array
     {
         $iteration = 1;
@@ -199,6 +235,7 @@ abstract class PDOAbstractRepository
     }
 
 
+    // findBy()
     protected function addCriteriaToSql(array $orderCriterias, string $sql): string
     {
         $iteration = 1;
@@ -227,6 +264,7 @@ abstract class PDOAbstractRepository
     }
 
 
+    // __construct()
     protected function getPdo(): PDO
     {
         if($this->pdo === null){
