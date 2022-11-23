@@ -13,12 +13,11 @@ abstract class PDOAbstractRepository
     protected const DB_USER = 'root';
     protected const DB_PASSWORD = '';
     
-    // protected array $columns;
+    protected ?PDO $pdo = null;
+
+    protected string $table;
     protected array $requiredColumns;
     protected array $optionnalColumns;
-
-    protected ?PDO $pdo = null;
-    protected string $table;
 
 
     public function __construct() 
@@ -140,21 +139,21 @@ abstract class PDOAbstractRepository
         $iteration = 1;
 
         foreach($this->requiredColumns as $key => $value){
-            $value1 = $values[$key];
+            $securedValue = htmlspecialchars($values[$key]);
 
             if($iteration === count($this->requiredColumns)){
                 $sql .= " $key ";
 
                 if(!$hasOptionnalValue){
                     $sql .= ')';
-                    $params[":$key"] = $value1;
+                    $params[":$key"] = $securedValue;
                 }else{
                     $sql .= ',';
-                    $params[":$key"] = $value1;
+                    $params[":$key"] = $securedValue;
                 }
             }else{
                 $sql .= " $key,";
-                $params[":$key"] = $value1;
+                $params[":$key"] = $securedValue;
             }
 
             $iteration++;
@@ -171,12 +170,14 @@ abstract class PDOAbstractRepository
         if($hasOptionnalValue){
             foreach($optionnalValues as $key => $value){
 
+                $securedValue = htmlspecialchars($value);
+
                 if($iteration !== count($optionnalValues)){
                     $sql .= " $key,";
-                    $params[":$key"] = $value;
+                    $params[":$key"] = $securedValue;
                 }else{
                     $sql .= " $key )";
-                    $params[":$key"] = $value;
+                    $params[":$key"] = $securedValue;
                 }
 
                 $iteration++;
@@ -218,7 +219,6 @@ abstract class PDOAbstractRepository
                 die;
             }
 
-            $key = htmlspecialchars($key);
             $value = htmlspecialchars($value); 
 
             $sql .= "$key = :$key";

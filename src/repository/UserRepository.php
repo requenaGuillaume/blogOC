@@ -4,10 +4,9 @@ namespace App\Repository;
 
 class UserRepository extends PDOAbstractRepository
 {
-    // protected array $columns = ['id', 'role', 'pseudo', 'mail'];
+    protected string $table = 'user';
     protected array $requiredColumns = ['role' => 'role', 'pseudo' => 'pseudo', 'mail' => 'mail', 'password' => 'password']; // write authorized required values
     protected array $optionnalColumns = ['id' => 'id']; // write authorized optionnal values
-    protected string $table = 'user';
 
     public function run()
     {
@@ -38,10 +37,10 @@ class UserRepository extends PDOAbstractRepository
         $values = [
             'role' => 'user',
             'pseudo' => 'lolilol',
-            'mail' => 'lolilol9@symfony.com',
+            'mail' => 'lolilol99@symfony.com',
             'password' => 'hashedPassword',
-            'id' => 900002
-            // 'ptdr' => 'ptdr' // value not allowed, cause exception
+            'id' => 5900002
+            // 'ptdr' => 'ptdr' // value not allowed, cause an exception
         ]; 
         // $this->create($values); // ok
 
