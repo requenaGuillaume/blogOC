@@ -6,8 +6,7 @@ use PDO;
 use PDOException;
 
 abstract class PDOAbstractRepository
-{
-    
+{    
     protected const DB_HOST = 'localhost';
     protected const DB_NAME = 'blogoc';
     protected const DB_USER = 'root';
@@ -26,13 +25,28 @@ abstract class PDOAbstractRepository
     }
 
 
-    abstract public function update(): void;
+    public function update(array $values, int $id): void
+    {
+        $authorizedValues = array_merge($this->requiredColumns, $this->optionnalColumns);
+        $unauthorizedValues = array_diff_key($values, $authorizedValues);
+
+        if(!empty($unauthorizedValues)){
+            echo 'Une erreur est survenue.';
+            die();
+        }
+
+        extract($this->buildUpdateQuery($values));
+
+        $params[':id'] = $id;
+
+        $query = $this->pdo->prepare($sql);
+        $query->execute($params);
+    }
 
 
     public function create(array $values): void
     {
         $optionnalValues = array_diff_key($values, $this->requiredColumns);
-
         $unauthorizedValues = array_diff_key($optionnalValues, $this->optionnalColumns);
 
         if(!empty($unauthorizedValues)){
@@ -40,7 +54,7 @@ abstract class PDOAbstractRepository
             die();
         }
 
-        extract($this->buildQuery($values, $optionnalValues));
+        extract($this->buildCreateQuery($values, $optionnalValues));
 
         $query = $this->pdo->prepare($finalSql);
         $query->execute($params);
@@ -116,8 +130,42 @@ abstract class PDOAbstractRepository
 
     // ========================== PROTECTED FUNCTIONS ========================== \\
 
+    // update()
+    private function buildUpdateQuery(array $values): array
+    {
+        $sql = "UPDATE {$this->table} SET";
+
+        $iteration = 1;
+
+        foreach($values as $key => $value){
+            $securedValue = htmlspecialchars($value);
+
+            if($iteration === 1){
+                $sql .= " $key = :$key ";
+                $params[":$key"] = $securedValue;
+                
+                if(count($values) > 1){
+                    $sql .= ', ';
+                }
+            }else{
+                $sql .= " $key = :$key";
+                $params[":$key"] = $securedValue;
+
+                if($iteration !== count($values)){
+                    $sql .= ', ';
+                }
+            }            
+
+            $iteration++;
+        }
+
+        $sql .= ' WHERE id = :id';
+
+        return compact('sql', 'params');
+    }
+
     // create()
-    private function buildQuery(array $values, array $optionnalValues)
+    private function buildCreateQuery(array $values, array $optionnalValues): array
     {
         $sql = "INSERT INTO {$this->table} (";
         $params = [];

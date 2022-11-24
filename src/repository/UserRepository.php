@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-class UserRepository extends PDOAbstractRepository
+final class UserRepository extends PDOAbstractRepository
 {
     protected string $table = 'user';
     protected array $requiredColumns = ['role' => 'role', 'pseudo' => 'pseudo', 'mail' => 'mail', 'password' => 'password']; // write authorized required values
@@ -34,23 +34,38 @@ class UserRepository extends PDOAbstractRepository
         // ], 
         // limit: 5, offset: 0); // ok
 
-        $values = [
-            'role' => 'user',
-            'pseudo' => 'lolilol',
-            'mail' => 'lolilol99@symfony.com',
-            'password' => 'hashedPassword',
-            'id' => 5900002
-            // 'ptdr' => 'ptdr' // value not allowed, cause an exception
-        ]; 
+        // $values = [
+        //     'role' => 'user',
+        //     'pseudo' => 'lolilol',
+        //     'mail' => 'lolilol99@symfony.com',
+        //     'password' => 'hashedPassword',
+        //     'id' => 5900002
+        //     // 'ptdr' => 'ptdr' // value not allowed, cause an exception
+        // ]; 
         // $this->create($values); // ok
 
+        // var_dump($user);
+
+        // $user = $this->find(60);
+        // var_dump($user);
+        
+        // $values = [
+        //     'pseudo' => 'rahrahrah',
+        //     'role' => 'user',
+        //     'mail' => 'addressMail@lol.fr',
+        //     'password' => 'passwordHashé'
+        //     // 'ptdr' => 'ptdr'
+        // ];
+        // $this->update($values, 60); // ok
+
+        // $user = $this->find(60);
         // var_dump($user);
     }
 
 
-    public function update(): void
-    {
-        // TODO
-    }
+    // public function update(): void
+    // {
+    //     // TODO
+    // }
 
 }
