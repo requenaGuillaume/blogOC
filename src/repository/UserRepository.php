@@ -5,8 +5,13 @@ namespace App\Repository;
 final class UserRepository extends PDOAbstractRepository
 {
     protected string $table = 'user';
-    protected array $requiredColumns = ['role' => 'role', 'pseudo' => 'pseudo', 'mail' => 'mail', 'password' => 'password'];
     protected array $optionnalColumns = [];
+    protected array $requiredColumns = [
+        'role' => 'role', 
+        'pseudo' => 'pseudo', 
+        'mail' => 'mail', 
+        'password' => 'password'
+    ];
 
 
     public function run()
