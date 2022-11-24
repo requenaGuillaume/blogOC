@@ -5,8 +5,8 @@ namespace App\Repository;
 final class UserRepository extends PDOAbstractRepository
 {
     protected string $table = 'user';
-    protected array $requiredColumns = ['role' => 'role', 'pseudo' => 'pseudo', 'mail' => 'mail', 'password' => 'password']; // write authorized required values
-    protected array $optionnalColumns = ['id' => 'id']; // write authorized optionnal values
+    protected array $requiredColumns = ['role' => 'role', 'pseudo' => 'pseudo', 'mail' => 'mail', 'password' => 'password'];
+    protected array $optionnalColumns = ['id' => 'id'];
 
 
     public function run()
