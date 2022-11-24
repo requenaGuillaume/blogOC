@@ -8,6 +8,7 @@ final class UserRepository extends PDOAbstractRepository
     protected array $requiredColumns = ['role' => 'role', 'pseudo' => 'pseudo', 'mail' => 'mail', 'password' => 'password']; // write authorized required values
     protected array $optionnalColumns = ['id' => 'id']; // write authorized optionnal values
 
+
     public function run()
     {
         // $user = $this->find(1); // ok
@@ -18,7 +19,7 @@ final class UserRepository extends PDOAbstractRepository
         //     'pseudo' => 'testUser'
         // ]); // ok
 
-        // $this->delete(7); // ok
+        // $this->delete(300002); // ok
 
         // $user = $this->findBy(data: [
         //     'pseudo' => 'testUser',
@@ -34,17 +35,17 @@ final class UserRepository extends PDOAbstractRepository
         // ], 
         // limit: 5, offset: 0); // ok
 
+        // var_dump($users);
+
         // $values = [
         //     'role' => 'user',
-        //     'pseudo' => 'lolilol',
-        //     'mail' => 'lolilol99@symfony.com',
-        //     'password' => 'hashedPassword',
-        //     'id' => 5900002
+        //     'pseudo' => 'ok',
+        //     'mail' => 'ok@symfony.com',
+        //     'password' => 'ok',
+        //     'id' => 78530002
         //     // 'ptdr' => 'ptdr' // value not allowed, cause an exception
         // ]; 
-        // $this->create($values); // ok
-
-        // var_dump($user);
+        // $this->create($values); // ok        
 
         // $user = $this->find(60);
         // var_dump($user);
@@ -61,11 +62,5 @@ final class UserRepository extends PDOAbstractRepository
         // $user = $this->find(60);
         // var_dump($user);
     }
-
-
-    // public function update(): void
-    // {
-    //     // TODO
-    // }
 
 }

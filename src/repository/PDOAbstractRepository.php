@@ -128,7 +128,7 @@ abstract class PDOAbstractRepository
     }
 
 
-    // ========================== PROTECTED FUNCTIONS ========================== \\
+    // ========================== PRIVATE FUNCTIONS ========================== \\
 
     // update()
     private function buildUpdateQuery(array $values): array
@@ -164,6 +164,7 @@ abstract class PDOAbstractRepository
         return compact('sql', 'params');
     }
 
+    
     // create()
     private function buildCreateQuery(array $values, array $optionnalValues): array
     {
@@ -181,6 +182,7 @@ abstract class PDOAbstractRepository
 
         return compact('finalSql', 'params');
     }
+
 
     private function beginQuery(string $sql, array $values, array $params, bool $hasOptionnalValue): array
     {
@@ -235,7 +237,8 @@ abstract class PDOAbstractRepository
         return compact('sql', 'params', 'hasOptionnalValue', 'optionnalValues');
     }
 
-    public function finishQuery(string $sql, array $params): string
+
+    private function finishQuery(string $sql, array $params): string
     {
         $iteration = 1;
 
@@ -254,23 +257,25 @@ abstract class PDOAbstractRepository
 
 
     // findBy() & findOneBy()
-    protected function getSql(array $data): array
+    private function getSql(array $data): array
     {
         $iteration = 1;
         $sql = 'WHERE ';
         $params = [];
 
+        $allColumns = array_merge($this->requiredColumns, $this->optionnalColumns);
+
         foreach($data as $key => $value){
-            if(!in_array($key, $this->columns)){
+            if(!in_array($key, $allColumns)){
                 // throw exception !
                 echo 'Une erreur est survenue.';
                 die;
             }
 
-            $value = htmlspecialchars($value); 
+            $securedValue = htmlspecialchars($value); 
 
             $sql .= "$key = :$key";
-            $params[":$key"] = $value;
+            $params[":$key"] = $securedValue;
 
             if($iteration !== count($data)){
                 $sql .= ' AND ';
@@ -284,13 +289,14 @@ abstract class PDOAbstractRepository
 
 
     // findBy()
-    protected function addCriteriaToSql(array $orderCriterias, string $sql): string
+    private function addCriteriaToSql(array $orderCriterias, string $sql): string
     {
+        $allColumns = array_merge($this->requiredColumns, $this->optionnalColumns);
         $iteration = 1;
 
         foreach($orderCriterias as $key => $value){
 
-            if(!in_array($key, $this->columns)){
+            if(!in_array($key, $allColumns)){
                 // throw exception !
                 echo 'Une erreur est survenue.';
                 die;
@@ -313,7 +319,7 @@ abstract class PDOAbstractRepository
 
 
     // __construct()
-    protected function getPdo(): PDO
+    private function getPdo(): PDO
     {
         if($this->pdo === null){
             try{
