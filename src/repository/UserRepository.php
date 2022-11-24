@@ -16,7 +16,7 @@ final class UserRepository extends PDOAbstractRepository
 
     public function run()
     {
-        // $user = $this->find(1); // ok
+        $user = $this->find(1); // ok
         // $users = $this->findAll();  // ok
 
         // $user = $this->findOneBy([
@@ -40,7 +40,7 @@ final class UserRepository extends PDOAbstractRepository
         // ], 
         // limit: 5, offset: 0); // ok
 
-        // var_dump($users);
+        var_dump($user);
 
         // $values = [
         //     'role' => 'user',

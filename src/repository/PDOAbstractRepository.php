@@ -68,14 +68,14 @@ abstract class PDOAbstractRepository
     }
 
     
-    public function find(int $id): array
+    public function find(int $id): ?array
     {
         $query = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE id = :id LIMIT 0,1");
 
         $query->execute([':id' => $id]);
         $result = $query->fetch();
 
-        return $result;
+        return $result === false ? null : $result;
     }
 
 
