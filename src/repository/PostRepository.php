@@ -12,6 +12,7 @@ class PostRepository extends PDOAbstractRepository
         'author_id' => 'author_id', 
         'head' => 'head',
         'last_update' => 'last_update',
+        'status' => 'status',
         'content' => 'content',
         'slug' => 'slug'
     ];
