@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-class PostRepository extends PDOAbstractRepository
+final class PostRepository extends PDOAbstractRepository
 {
     protected string $table = 'post';
     protected array $optionnalColumns = [];

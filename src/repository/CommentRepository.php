@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-class CommentRepository extends PDOAbstractRepository
+final class CommentRepository extends PDOAbstractRepository
 {
     protected string $table = 'comment';
     protected array $optionnalColumns = ['status' => 'status'];
