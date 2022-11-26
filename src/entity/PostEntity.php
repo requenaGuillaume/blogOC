@@ -95,7 +95,7 @@ class PostEntity extends AbstractEntity
         return $this;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
