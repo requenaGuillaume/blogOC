@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use DateTime;
 
-class PostEntity extends AbstractEntity
+final class PostEntity extends AbstractEntity
 {
     private int $id;
     private array $comments;

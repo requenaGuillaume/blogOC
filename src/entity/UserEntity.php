@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-class UserEntity extends AbstractEntity
+final class UserEntity extends AbstractEntity
 {
     private string $role;
     private string $mail;
