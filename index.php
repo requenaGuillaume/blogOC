@@ -1,15 +1,19 @@
 <?php
 declare(strict_types=1);
 
-use App\Controller\RegisterController;
 use App\Core\Kernel;
+use App\Repository\PostRepository;
+use App\Repository\UserRepository;
 
 date_default_timezone_set('Europe/Paris');
 
 require_once 'vendor/autoload.php';
 
-$testTemplateController = new RegisterController();
-$testTemplateController->run();
+$UserRepository = new UserRepository();
+$UserRepository->run();
+
+// $postRepository = new PostRepository();
+// var_dump($postRepository->find(1)); // ok
 
 // $kernel = new Kernel();
 // $kernel->process();

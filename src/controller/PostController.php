@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-class ArticleController // extends AbstractController
+class PostController // extends AbstractController
 {
     public function run(): void
     {
