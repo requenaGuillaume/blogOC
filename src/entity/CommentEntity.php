@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-class CommentEntity
+class CommentEntity extends AbstractEntity
 {
     private int $id;
     private int $postId;

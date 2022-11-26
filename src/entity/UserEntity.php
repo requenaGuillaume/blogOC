@@ -2,25 +2,13 @@
 
 namespace App\Entity;
 
-class UserEntity
+class UserEntity extends AbstractEntity
 {
-    private int $id;
     private string $role;
     private string $mail;
     private string $pseudo;
     private string $password;
 
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
 
     public function setRole($role): self
     {
