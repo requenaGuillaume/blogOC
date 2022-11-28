@@ -65,4 +65,15 @@ final class CommentEntity extends AbstractEntity
     {
         return $this->content;
     }
+
+    public function denormalize(): array
+    {
+        $array = [];
+
+        foreach($this as $key => $value){
+            $array[$key] = $value;
+        }
+
+        return $array;
+    }
 }

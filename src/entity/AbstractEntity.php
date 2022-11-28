@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-class AbstractEntity
+abstract class AbstractEntity
 {
     protected int $id;
 
@@ -16,4 +16,6 @@ class AbstractEntity
         $this->id = $id;
         return $this;
     }
+
+    abstract public function denormalize(): array;
 }

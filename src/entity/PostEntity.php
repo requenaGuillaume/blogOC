@@ -121,4 +121,15 @@ final class PostEntity extends AbstractEntity
     {
         return $this->slug;
     }
+    
+    public function denormalize(): array
+    {
+        $array = [];
+
+        foreach($this as $key => $value){
+            $array[$key] = $value;
+        }
+
+        return $array;
+    }
 }
