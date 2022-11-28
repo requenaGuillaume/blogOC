@@ -8,7 +8,7 @@ final class Router
 {    
     private const ROUTE = [
         'homepage' => 'Controller\HomepageController',
-        'article' => 'Controller\ArticleController',
+        'post' => 'Controller\PostController',
         'login' => 'Controller\LoginController',
         'logout' => 'Controller\LogoutController',
         'fixtures' => 'Controller\FixturesController'
