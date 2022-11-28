@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
-class LogoutController
+class FixturesController
 {
     public function run(): void
     {
-        echo 'Test Router Logout';
+        echo 'Test Router Fixtures';
     }
+
 }

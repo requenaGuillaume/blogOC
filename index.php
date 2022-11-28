@@ -2,8 +2,7 @@
 declare(strict_types=1);
 
 use App\Core\Kernel;
-use App\Repository\PostRepository;
-use App\Repository\UserRepository;
+use App\Entity\UserEntity;
 
 date_default_timezone_set('Europe/Paris');
 
