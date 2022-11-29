@@ -17,17 +17,6 @@ final class PostEntity extends AbstractEntity
     private string $slug;
 
 
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
     public function setComments(array $comments): self
     {
         $this->comments = $comments;
@@ -120,6 +109,16 @@ final class PostEntity extends AbstractEntity
     public function getSlug(): string
     {
         return $this->slug;
+    }
+
+    public function normalize(array $array)
+    {
+        foreach($array as $key => $value){
+            $method = 'set'.ucfirst($key);
+            $this->$method($value);
+        }
+
+        return $this;
     }
     
     public function denormalize(): array

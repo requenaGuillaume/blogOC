@@ -54,6 +54,16 @@ final class UserEntity extends AbstractEntity
         return $this->password;
     }
 
+    public function normalize(array $array)
+    {
+        foreach($array as $key => $value){
+            $method = 'set'.ucfirst($key);
+            $this->$method($value);
+        }
+
+        return $this;
+    }
+
     public function denormalize(): array
     {
         $array = [];

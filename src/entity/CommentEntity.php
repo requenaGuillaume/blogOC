@@ -4,23 +4,12 @@ namespace App\Entity;
 
 final class CommentEntity extends AbstractEntity
 {
-    private int $id;
+    protected int $id;
     private int $postId;
     private int $authorId;
     private string $status;
     private string $content;
 
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
 
     public function setPostId(int $postId): self
     {
@@ -64,6 +53,16 @@ final class CommentEntity extends AbstractEntity
     public function getContent(): string
     {
         return $this->content;
+    }
+
+    public function normalize(array $array)
+    {
+        foreach($array as $key => $value){
+            $method = 'set'.ucfirst($key);
+            $this->$method($value);
+        }
+
+        return $this;
     }
 
     public function denormalize(): array
