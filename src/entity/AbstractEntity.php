@@ -17,5 +17,7 @@ abstract class AbstractEntity
         return $this;
     }
 
+    abstract public function normalize(array $array);
+
     abstract public function denormalize(): array;
 }

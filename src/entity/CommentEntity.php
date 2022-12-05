@@ -4,11 +4,11 @@ namespace App\Entity;
 
 final class CommentEntity extends AbstractEntity
 {
-    protected int $id;
     private int $postId;
     private int $authorId;
     private string $status;
     private string $content;
+    private string $createdAt;
 
 
     public function setPostId(int $postId): self
@@ -55,10 +55,28 @@ final class CommentEntity extends AbstractEntity
         return $this->content;
     }
 
-    public function normalize(array $array)
+    public function setCreatedAt(string $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function normalize(array $array): self
     {
         foreach($array as $key => $value){
             $method = 'set'.ucfirst($key);
+
+            if(str_contains($method, '_')){
+                $letterAfterUnderscore = $method[strpos($method, '_') + 1];
+                $letterTouppercase = strtoupper($letterAfterUnderscore);
+                $method = str_replace("_$letterAfterUnderscore", $letterTouppercase, $method);
+            }
+
             $this->$method($value);
         }
 

@@ -7,10 +7,10 @@ use PDOException;
 
 abstract class PDOAbstractRepository
 {    
-    protected const DB_HOST = 'localhost';
-    protected const DB_NAME = 'blogoc';
-    protected const DB_USER = 'root';
-    protected const DB_PASSWORD = '';
+    public const DB_HOST = 'localhost';
+    public const DB_NAME = 'blogoc';
+    public const DB_USER = 'root';
+    public const DB_PASSWORD = '';
     
     protected ?PDO $pdo = null;
 
@@ -268,6 +268,9 @@ abstract class PDOAbstractRepository
         foreach($data as $key => $value){
             if(!in_array($key, $allColumns)){
                 // throw exception !
+                var_dump($key);
+                var_dump($allColumns);
+                die;
                 echo 'Une erreur est survenue.';
                 die;
             }

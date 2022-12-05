@@ -54,10 +54,17 @@ final class UserEntity extends AbstractEntity
         return $this->password;
     }
 
-    public function normalize(array $array)
+    public function normalize(array $array): self
     {
         foreach($array as $key => $value){
             $method = 'set'.ucfirst($key);
+
+            if(str_contains($method, '_')){
+                $letterAfterUnderscore = $method[strpos($method, '_') + 1];
+                $letterTouppercase = strtoupper($letterAfterUnderscore);
+                $method = str_replace("_$letterAfterUnderscore", $letterTouppercase, $method);
+            }
+
             $this->$method($value);
         }
 

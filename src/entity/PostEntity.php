@@ -6,30 +6,30 @@ use DateTime;
 
 final class PostEntity extends AbstractEntity
 {
-    private int $id;
-    private array $comments;
+    private ?string $comments;
     private string $title;
     private int $authorId;
     private string $head;
-    private DateTime $lastUpdate;
+    private string $lastUpdate;
     private string $status;
     private string $content;
     private string $slug;
 
 
-    public function setComments(array $comments): self
+    public function setComments($comments): self
     {
+        // json_encode
         $this->comments = $comments;
         return $this;
     }
     
-    public function addComments(array $comment): self
+    public function addComments($comment): self
     {
-        $this->comments[] = $comment;
+        // $this->comments[] = $comment;
         return $this;
     }
 
-    public function getComments(): array
+    public function getComments(): ?string
     {
         return $this->comments;
     }
@@ -73,7 +73,7 @@ final class PostEntity extends AbstractEntity
         return $this;
     }
 
-    public function getLastUpdate(): DateTime
+    public function getLastUpdate(): string
     {
         return $this->lastUpdate;
     }
@@ -111,10 +111,17 @@ final class PostEntity extends AbstractEntity
         return $this->slug;
     }
 
-    public function normalize(array $array)
+    public function normalize(array $array): self
     {
         foreach($array as $key => $value){
             $method = 'set'.ucfirst($key);
+
+            if(str_contains($method, '_')){
+                $letterAfterUnderscore = $method[strpos($method, '_') + 1];
+                $letterTouppercase = strtoupper($letterAfterUnderscore);
+                $method = str_replace("_$letterAfterUnderscore", $letterTouppercase, $method);
+            }
+
             $this->$method($value);
         }
 
