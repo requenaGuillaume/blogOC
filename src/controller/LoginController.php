@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
-class LoginController // extends AbstractController
+class LoginController extends AbstractController
 {
-    public function run(): void
+    public function run()
     {
-        echo 'Test Router Login'; // second test ok
+        
+
+        return $this->render('LoginTemplate');
     }
 }
