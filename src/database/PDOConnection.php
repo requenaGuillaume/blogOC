@@ -24,7 +24,7 @@ class PDOConnection
     public function getPdo(): PDO
     {
         if($this->pdo === null){
-            var_dump("Connexion");
+            // var_dump("Connexion"); // TODO : too much connexion
             try{
                 $this->pdo = new PDO('mysql:host='.self::DB_HOST.';
                                       dbname='.self::DB_NAME.';

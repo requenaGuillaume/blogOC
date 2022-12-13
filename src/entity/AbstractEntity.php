@@ -6,7 +6,7 @@ abstract class AbstractEntity
 {
     protected int $id;
     
-    // Marche pas .....
+    // Child cannot use it for denormalize - TODO : try again to remove duplicate code in every entity !
     // public function listProperties(): array
     // {
     //     $properties = [];

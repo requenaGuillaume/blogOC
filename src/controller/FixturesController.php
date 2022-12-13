@@ -54,7 +54,7 @@ class FixturesController
     {
         // TODO : This route must be accessible only by admin, else redirect
 
-        echo 'Beginning of the Fixtures<br><br>';        
+        echo 'Beginning of the Fixtures<br><br>';
 
         $this->createUsers('admin', 3);
         echo 'Admin Fixtures Done !<br>';
@@ -71,6 +71,35 @@ class FixturesController
         echo '<br>End of the Fixtures';
     }
 
+    
+    /**
+     * /!\ Danger : Use in dev/test only and be careful, 
+     * This method will drop all data stored in database !
+     * If you let it commented, it will just be a redirection
+     */
+    // public function delete()
+    // {
+    //     echo 'Starting to drop data<br><br>';
+
+    //     $this->emptyTable('comment');
+    //     echo 'All comments removed from database !<br>';
+
+    //     $this->emptyTable('post');
+    //     echo 'All posts removed from database !<br>';
+
+    //     $this->emptyTable('user');
+    //     echo 'All users removed from database !<br>';
+
+    //     echo '<br>Database is now empty';
+    // }
+
+
+    // ========================== PRIVATE FUNCTIONS ========================== \\
+
+    private function emptyTable(string $table): void
+    {
+        $this->pdo->exec("DELETE FROM $table");
+    }
 
     private function createUsers(string $role, int $number): void
     {
