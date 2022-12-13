@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+
 final class CommentEntity extends AbstractEntity
 {
     private int $postId;
@@ -10,6 +11,17 @@ final class CommentEntity extends AbstractEntity
     private string $content;
     private string $createdAt;
 
+
+    public function listProperties(): array
+    {
+        $properties = [];
+        
+        foreach($this as $key => $value){
+            $properties[] = $key;
+        }
+
+        return $properties;
+    }
 
     public function setPostId(int $postId): self
     {
@@ -66,31 +78,4 @@ final class CommentEntity extends AbstractEntity
         return $this->createdAt;
     }
 
-    public function normalize(array $array): self
-    {
-        foreach($array as $key => $value){
-            $method = 'set'.ucfirst($key);
-
-            if(str_contains($method, '_')){
-                $letterAfterUnderscore = $method[strpos($method, '_') + 1];
-                $letterTouppercase = strtoupper($letterAfterUnderscore);
-                $method = str_replace("_$letterAfterUnderscore", $letterTouppercase, $method);
-            }
-
-            $this->$method($value);
-        }
-
-        return $this;
-    }
-
-    public function denormalize(): array
-    {
-        $array = [];
-
-        foreach($this as $key => $value){
-            $array[$key] = $value;
-        }
-
-        return $array;
-    }
 }

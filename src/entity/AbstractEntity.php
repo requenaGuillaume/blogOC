@@ -5,6 +5,18 @@ namespace App\Entity;
 abstract class AbstractEntity
 {
     protected int $id;
+    
+    // Marche pas .....
+    // public function listProperties(): array
+    // {
+    //     $properties = [];
+        
+    //     foreach($this as $key => $value){
+    //         $properties[] = $key;
+    //     }
+
+    //     return $properties;
+    // }
 
     public function getId(): int
     {
@@ -16,8 +28,4 @@ abstract class AbstractEntity
         $this->id = $id;
         return $this;
     }
-
-    abstract public function normalize(array $array);
-
-    abstract public function denormalize(): array;
 }

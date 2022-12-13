@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+
 final class UserEntity extends AbstractEntity
 {
     private string $role;
@@ -9,6 +10,17 @@ final class UserEntity extends AbstractEntity
     private string $pseudo;
     private string $password;
 
+
+    public function listProperties(): array
+    {
+        $properties = [];
+        
+        foreach($this as $key => $value){
+            $properties[] = $key;
+        }
+
+        return $properties;
+    }
 
     public function setRole($role): self
     {
@@ -52,34 +64,6 @@ final class UserEntity extends AbstractEntity
     public function getPassword(): string
     {
         return $this->password;
-    }
-
-    public function normalize(array $array): self
-    {
-        foreach($array as $key => $value){
-            $method = 'set'.ucfirst($key);
-
-            if(str_contains($method, '_')){
-                $letterAfterUnderscore = $method[strpos($method, '_') + 1];
-                $letterTouppercase = strtoupper($letterAfterUnderscore);
-                $method = str_replace("_$letterAfterUnderscore", $letterTouppercase, $method);
-            }
-
-            $this->$method($value);
-        }
-
-        return $this;
-    }
-
-    public function denormalize(): array
-    {
-        $array = [];
-
-        foreach($this as $key => $value){
-            $array[$key] = $value;
-        }
-
-        return $array;
     }
 
 }

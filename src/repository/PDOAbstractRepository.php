@@ -5,7 +5,7 @@ namespace App\Repository;
 use PDO;
 use PDOException;
 
-abstract class PDOAbstractRepository
+abstract class PDOAbstractRepository implements RepositoryInterface
 {    
     public const DB_HOST = 'localhost';
     public const DB_NAME = 'blogoc';
@@ -90,7 +90,7 @@ abstract class PDOAbstractRepository
     }
 
 
-    public function findOneBy(array $data)
+    public function findOneBy(array $data): ?array
     {
         extract($this->getSql($data));
 
@@ -99,11 +99,11 @@ abstract class PDOAbstractRepository
         $query->execute($params);
         $result = $query->fetch();
 
-        return $result;
+        return $result ? $result : null;
     }
 
 
-    public function findBy(array $data, ?array $orderCriterias = null, ?int $limit = null, ?int $offset = null)
+    public function findBy(array $data, ?array $orderCriterias = null, ?int $limit = null, ?int $offset = null): array
     {
         extract($this->getSql($data));
 
@@ -130,7 +130,6 @@ abstract class PDOAbstractRepository
 
     // ========================== PRIVATE FUNCTIONS ========================== \\
 
-    // update()
     private function buildUpdateQuery(array $values): array
     {
         $sql = "UPDATE {$this->table} SET";
@@ -165,7 +164,6 @@ abstract class PDOAbstractRepository
     }
 
     
-    // create()
     private function buildCreateQuery(array $values, array $optionnalValues): array
     {
         $sql = "INSERT INTO {$this->table} (";
@@ -256,7 +254,6 @@ abstract class PDOAbstractRepository
     }
 
 
-    // findBy() & findOneBy()
     private function getSql(array $data): array
     {
         $iteration = 1;
@@ -268,9 +265,6 @@ abstract class PDOAbstractRepository
         foreach($data as $key => $value){
             if(!in_array($key, $allColumns)){
                 // throw exception !
-                var_dump($key);
-                var_dump($allColumns);
-                die;
                 echo 'Une erreur est survenue.';
                 die;
             }
@@ -291,7 +285,6 @@ abstract class PDOAbstractRepository
     }
 
 
-    // findBy()
     private function addCriteriaToSql(array $orderCriterias, string $sql): string
     {
         $allColumns = array_merge($this->requiredColumns, $this->optionnalColumns);
@@ -321,7 +314,6 @@ abstract class PDOAbstractRepository
     }
 
 
-    // __construct()
     private function getPdo(): PDO
     {
         if($this->pdo === null){

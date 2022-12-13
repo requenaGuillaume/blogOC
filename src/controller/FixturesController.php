@@ -12,7 +12,7 @@ use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Repository\CommentRepository;
 use App\Repository\PDOAbstractRepository;
-
+use App\Service\NormalizerService;
 
 class FixturesController
 {
@@ -27,6 +27,7 @@ class FixturesController
         $this->userRepository = new UserRepository();
         $this->postRepository = new PostRepository();
         $this->commentRepository = new CommentRepository();
+        $this->normalizer = new NormalizerService();
 
         $this->insertUserSql = "INSERT INTO user (role, pseudo, mail, password) VALUES (:role, :pseudo, :mail, :password)";
 
@@ -39,9 +40,9 @@ class FixturesController
                                    VALUES (:post_id, :author_id, :content, :status, NOW())";
     }
 
+
     public function run(): void
     {
-
         // TODO : This route must be accessible only by admin, else redirect
 
         echo 'Beginning of the Fixtures<br><br>';        
@@ -86,8 +87,7 @@ class FixturesController
         foreach($admins as $admin){
             for($p = 0; $p < $numberOfPostByAdmin; $p++){
 
-                $userEntity = new UserEntity();
-                $userAdmin = $userEntity->normalize($admin);
+                $userAdmin = $this->normalizer->normalize($admin, UserEntity::class);
 
                 $params = [
                     ':author_id' => $userAdmin->getId(), 
@@ -110,15 +110,13 @@ class FixturesController
         $users = $this->userRepository->findBy(data: ['role' => 'user'], limit: 3);
         
         foreach($posts as $post){
-            $postEntity = new PostEntity();
-            $post = $postEntity->normalize($post);
+            $post = $this->normalizer->normalize($post, PostEntity::class);
 
             $comments = $post->getComments();
             $comments = $comments ? json_decode($comments) : [];
 
             foreach($users as $user){
-                $userEntity = new UserEntity();
-                $user = $userEntity->normalize($user);
+                $user = $this->normalizer->normalize($user, UserEntity::class);
 
                 $userId = $user->getId();
                 $postId = $post->getId();
@@ -143,15 +141,14 @@ class FixturesController
                     'status' => $status
                 ]);
 
-                $commentEntity = new CommentEntity();
-                $comment = $commentEntity->normalize($comment);
+                $comment = $this->normalizer->normalize($comment, CommentEntity::class);
 
                 $comments[] = $comment->getId();
             }
 
             $comments = json_encode($comments);
 
-            $params = ['post_id' => $postId, 'comments' => $comments];
+            $params = [':post_id' => $postId, ':comments' => $comments];
             
             $query = $this->pdo->prepare($this->updatePostSql);
             $query->execute($params);

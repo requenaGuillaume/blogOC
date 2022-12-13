@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use DateTime;
 
 final class PostEntity extends AbstractEntity
 {
@@ -16,16 +15,26 @@ final class PostEntity extends AbstractEntity
     private string $slug;
 
 
+    public function listProperties(): array
+    {
+        $properties = [];
+        
+        foreach($this as $key => $value){
+            $properties[] = $key;
+        }
+
+        return $properties;
+    }
+
     public function setComments($comments): self
     {
-        // json_encode
         $this->comments = $comments;
         return $this;
     }
     
     public function addComments($comment): self
     {
-        // $this->comments[] = $comment;
+        $this->comments[] = $comment;
         return $this;
     }
 
@@ -111,31 +120,4 @@ final class PostEntity extends AbstractEntity
         return $this->slug;
     }
 
-    public function normalize(array $array): self
-    {
-        foreach($array as $key => $value){
-            $method = 'set'.ucfirst($key);
-
-            if(str_contains($method, '_')){
-                $letterAfterUnderscore = $method[strpos($method, '_') + 1];
-                $letterTouppercase = strtoupper($letterAfterUnderscore);
-                $method = str_replace("_$letterAfterUnderscore", $letterTouppercase, $method);
-            }
-
-            $this->$method($value);
-        }
-
-        return $this;
-    }
-    
-    public function denormalize(): array
-    {
-        $array = [];
-
-        foreach($this as $key => $value){
-            $array[$key] = $value;
-        }
-
-        return $array;
-    }
 }
