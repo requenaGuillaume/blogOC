@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use PDO;
-use PDOException;
 use Faker\Factory;
 use App\Entity\PostEntity;
 use App\Entity\UserEntity;
@@ -11,18 +10,28 @@ use App\Entity\CommentEntity;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Repository\CommentRepository;
-use App\Repository\PDOAbstractRepository;
+use App\Database\PDOConnection;
 use App\Service\NormalizerService;
 
 class FixturesController
 {
     protected ?PDO $pdo = null;
-    private const POST_STATUS = ['draft', 'online'];
-    private const COMMENT_STATUS = ['waiting', 'valid', 'invalid'];
+
+    private const POST_STATUS = [
+        PostEntity::STATUS_ONLINE, 
+        PostEntity::STATUS_DRAFT
+    ];
+
+    private const COMMENT_STATUS = [
+        CommentEntity::STATUS_VALID, 
+        CommentEntity::STATUS_WAITING, 
+        CommentEntity::STATUS_INVALID
+    ];
 
     public function __construct() 
     {
-        $this->pdo = $this->getPDO();
+        $pdoConnection = new PDOConnection();
+        $this->pdo = $pdoConnection->getPdo();
         $this->faker = Factory::create();
         $this->userRepository = new UserRepository();
         $this->postRepository = new PostRepository();
@@ -154,23 +163,5 @@ class FixturesController
             $query->execute($params);
         }
     }
-
-    private function getPdo(): PDO
-    {
-        if($this->pdo === null){
-            try{
-                $this->pdo = new PDO('mysql:host='.PDOAbstractRepository::DB_HOST.';dbname='.PDOAbstractRepository::DB_NAME.';charset=utf8', PDOAbstractRepository::DB_USER, PDOAbstractRepository::DB_PASSWORD, 
-                                    [
-                                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-                                    ]);
-            }catch(PDOException $e){
-                echo $e->getMessage();
-                exit;
-            }
-        }
-
-        return $this->pdo;
-    } 
 
 }

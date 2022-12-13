@@ -11,6 +11,10 @@ final class CommentEntity extends AbstractEntity
     private string $content;
     private string $createdAt;
 
+    public const STATUS_WAITING = 'waiting';
+    public const STATUS_VALID = 'valid';
+    public const STATUS_INVALID = 'invalid';
+
 
     public function listProperties(): array
     {

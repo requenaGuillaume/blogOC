@@ -14,6 +14,9 @@ final class PostEntity extends AbstractEntity
     private string $content;
     private string $slug;
 
+    public const STATUS_DRAFT = 'draft';
+    public const STATUS_ONLINE = 'online';
+
 
     public function listProperties(): array
     {

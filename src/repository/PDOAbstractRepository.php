@@ -2,16 +2,11 @@
 
 namespace App\Repository;
 
+use App\Database\PDOConnection;
 use PDO;
-use PDOException;
 
 abstract class PDOAbstractRepository implements RepositoryInterface
 {    
-    public const DB_HOST = 'localhost';
-    public const DB_NAME = 'blogoc';
-    public const DB_USER = 'root';
-    public const DB_PASSWORD = '';
-    
     protected ?PDO $pdo = null;
 
     protected string $table;
@@ -19,9 +14,10 @@ abstract class PDOAbstractRepository implements RepositoryInterface
     protected array $optionnalColumns;
 
 
-    public function __construct() 
+    public function __construct()
     {
-        $this->pdo = $this->getPDO();
+        $pdoConnection = new PDOConnection();
+        $this->pdo = $pdoConnection->getPdo();
     }
 
 
@@ -313,22 +309,4 @@ abstract class PDOAbstractRepository implements RepositoryInterface
         return $sql;
     }
 
-
-    private function getPdo(): PDO
-    {
-        if($this->pdo === null){
-            try{
-                $this->pdo = new PDO('mysql:host='.self::DB_HOST.';dbname='.self::DB_NAME.';charset=utf8', self::DB_USER, self::DB_PASSWORD, 
-                                    [
-                                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-                                    ]);
-            }catch(PDOException $e){
-                echo $e->getMessage();
-                exit;
-            }
-        }
-
-        return $this->pdo;
-    }  
 }
