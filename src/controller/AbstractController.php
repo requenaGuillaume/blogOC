@@ -19,4 +19,17 @@ abstract class AbstractController
         require('src/template/SiteBaseTemplate.phtml');
     }
 
+
+    protected function redirect(string $url): void
+    {
+        header("Location: $url");
+        exit;
+    }
+
+    // TODO addFlash()
+    // protected function addFlash(string $bootstrapClass, string $message): void
+    // {
+    //     $_SESSION['flash'][$bootstrapClass][] = $message;
+    // }
+
 }

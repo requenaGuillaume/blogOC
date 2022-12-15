@@ -86,9 +86,9 @@ abstract class PDOAbstractRepository implements RepositoryInterface
     }
 
 
-    public function findOneBy(array $data): ?array
+    public function findOneBy(array $criteria): ?array
     {
-        extract($this->getSql($data));
+        extract($this->getSql($criteria));
 
         $query = $this->pdo->prepare("SELECT * FROM {$this->table} $sql");
 

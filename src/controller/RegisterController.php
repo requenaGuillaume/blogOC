@@ -21,6 +21,12 @@ class RegisterController extends AbstractController
         if($_POST){
             echo 'We sent data from our form<br>';
 
+            if(count($_POST) !== 4){
+                // Throw exception !
+                $errors[] = 'We got less or more fields than 4';
+                print_r($errors);die();
+            }
+
             foreach($_POST as $inputName => $inputValue){
                 
                 // Verify if there is only authorized fields
@@ -40,7 +46,7 @@ class RegisterController extends AbstractController
             
             $validator = new ValidatorService();
 
-            // If LENGTH aren't good
+            // // If LENGTH aren't good
             if(!$validator->checkLength($_POST['pseudo'], 2, 40)){
                 // Throw exception !
                 $errors[] = "Your pseudo length should be at least 2 characters and max 40 characters";
@@ -105,10 +111,18 @@ class RegisterController extends AbstractController
 
             $userRepository = new UserRepository();
 
+            $userAlreadyExist = $userRepository->findOneBy(['mail' => $userEntity->getMail()]);
+
+            if($userAlreadyExist){
+                // Throw exception !
+                $errors[] = "The email {$userEntity->getMail()} is already used";
+                print_r($errors);die();
+            }
+
             $userRepository->create($user); // works
 
             // return redirection + flash message
-
+            $this->redirect('http://blogoc/?page=homepage');
         }
 
         return $this->render('RegisterTemplate');
