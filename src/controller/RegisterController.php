@@ -69,16 +69,16 @@ class RegisterController extends AbstractController
                 print_r($errors);die();
             }
 
-            if(
-                !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_1)
-                || !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_2)
-                || !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_3)
-                || !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_4)
-            ){
-                $errors[] = "Your pass should contain at least 1 min letter, 1 maj letter, 1 number 
-                             and one of the following special character [.#~+=*\-_+²$=¤]";
-                print_r($errors);die();
-            }
+            // if(
+            //     !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_1)
+            //     || !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_2)
+            //     || !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_3)
+            //     || !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_4)
+            // ){
+            //     $errors[] = "Your pass should contain at least 1 min letter, 1 maj letter, 1 number 
+            //                  and one of the following special character [.#~+=*\-_+²$=¤]";
+            //     print_r($errors);die();
+            // }
 
             $userEntity = new UserEntity();
             $userEntity->setPseudo(htmlspecialchars($_POST['pseudo']))
@@ -106,6 +106,7 @@ class RegisterController extends AbstractController
             $userRepository->create($user);
 
             // return redirection + flash message
+            $this->addFlash('success', 'You succedeed to sign up !');
             $this->redirect('http://blogoc/?page=homepage');
         }
 

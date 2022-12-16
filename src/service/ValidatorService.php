@@ -18,7 +18,7 @@ class ValidatorService
     {
         $dataLength = strlen($data);
 
-        if($dataLength > $minLength && $dataLength < $maxLength){
+        if($dataLength >= $minLength && $dataLength < $maxLength){
             return true;
         }
 

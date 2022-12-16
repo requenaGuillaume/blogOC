@@ -26,10 +26,10 @@ abstract class AbstractController
         exit;
     }
 
-    // TODO addFlash()
-    // protected function addFlash(string $bootstrapClass, string $message): void
-    // {
-    //     $_SESSION['flash'][$bootstrapClass][] = $message;
-    // }
+
+    protected function addFlash(string $bootstrapClass, string $message): void
+    {
+        $_SESSION['flash'][$bootstrapClass][] = $message;
+    }
 
 }
