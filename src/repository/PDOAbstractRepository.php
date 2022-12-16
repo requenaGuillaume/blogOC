@@ -2,16 +2,11 @@
 
 namespace App\Repository;
 
+use App\Database\PDOConnection;
 use PDO;
-use PDOException;
 
-abstract class PDOAbstractRepository
+abstract class PDOAbstractRepository implements RepositoryInterface
 {    
-    protected const DB_HOST = 'localhost';
-    protected const DB_NAME = 'blogoc';
-    protected const DB_USER = 'root';
-    protected const DB_PASSWORD = '';
-    
     protected ?PDO $pdo = null;
 
     protected string $table;
@@ -19,9 +14,10 @@ abstract class PDOAbstractRepository
     protected array $optionnalColumns;
 
 
-    public function __construct() 
+    public function __construct()
     {
-        $this->pdo = $this->getPDO();
+        $pdoConnection = new PDOConnection();
+        $this->pdo = $pdoConnection->getPdo();
     }
 
 
@@ -90,7 +86,7 @@ abstract class PDOAbstractRepository
     }
 
 
-    public function findOneBy(array $data)
+    public function findOneBy(array $data): ?array
     {
         extract($this->getSql($data));
 
@@ -99,11 +95,11 @@ abstract class PDOAbstractRepository
         $query->execute($params);
         $result = $query->fetch();
 
-        return $result;
+        return $result ? $result : null;
     }
 
 
-    public function findBy(array $data, ?array $orderCriterias = null, ?int $limit = null, ?int $offset = null)
+    public function findBy(array $data, ?array $orderCriterias = null, ?int $limit = null, ?int $offset = null): array
     {
         extract($this->getSql($data));
 
@@ -130,7 +126,6 @@ abstract class PDOAbstractRepository
 
     // ========================== PRIVATE FUNCTIONS ========================== \\
 
-    // update()
     private function buildUpdateQuery(array $values): array
     {
         $sql = "UPDATE {$this->table} SET";
@@ -165,7 +160,6 @@ abstract class PDOAbstractRepository
     }
 
     
-    // create()
     private function buildCreateQuery(array $values, array $optionnalValues): array
     {
         $sql = "INSERT INTO {$this->table} (";
@@ -256,7 +250,6 @@ abstract class PDOAbstractRepository
     }
 
 
-    // findBy() & findOneBy()
     private function getSql(array $data): array
     {
         $iteration = 1;
@@ -288,7 +281,6 @@ abstract class PDOAbstractRepository
     }
 
 
-    // findBy()
     private function addCriteriaToSql(array $orderCriterias, string $sql): string
     {
         $allColumns = array_merge($this->requiredColumns, $this->optionnalColumns);
@@ -317,23 +309,4 @@ abstract class PDOAbstractRepository
         return $sql;
     }
 
-
-    // __construct()
-    private function getPdo(): PDO
-    {
-        if($this->pdo === null){
-            try{
-                $this->pdo = new PDO('mysql:host='.self::DB_HOST.';dbname='.self::DB_NAME.';charset=utf8', self::DB_USER, self::DB_PASSWORD, 
-                                    [
-                                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-                                    ]);
-            }catch(PDOException $e){
-                echo $e->getMessage();
-                exit;
-            }
-        }
-
-        return $this->pdo;
-    }  
 }

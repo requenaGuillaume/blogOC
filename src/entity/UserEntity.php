@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+
 final class UserEntity extends AbstractEntity
 {
     private string $role;
@@ -9,6 +10,17 @@ final class UserEntity extends AbstractEntity
     private string $pseudo;
     private string $password;
 
+
+    public function listProperties(): array
+    {
+        $properties = [];
+        
+        foreach($this as $key => $value){
+            $properties[] = $key;
+        }
+
+        return $properties;
+    }
 
     public function setRole($role): self
     {
@@ -53,4 +65,5 @@ final class UserEntity extends AbstractEntity
     {
         return $this->password;
     }
+
 }

@@ -2,24 +2,29 @@
 
 namespace App\Entity;
 
+
 final class CommentEntity extends AbstractEntity
 {
-    private int $id;
     private int $postId;
     private int $authorId;
     private string $status;
     private string $content;
+    private string $createdAt;
+
+    public const STATUS_WAITING = 'waiting';
+    public const STATUS_VALID = 'valid';
+    public const STATUS_INVALID = 'invalid';
 
 
-    public function setId(int $id): self
+    public function listProperties(): array
     {
-        $this->id = $id;
-        return $this;
-    }
+        $properties = [];
+        
+        foreach($this as $key => $value){
+            $properties[] = $key;
+        }
 
-    public function getId(): int
-    {
-        return $this->id;
+        return $properties;
     }
 
     public function setPostId(int $postId): self
@@ -65,4 +70,16 @@ final class CommentEntity extends AbstractEntity
     {
         return $this->content;
     }
+
+    public function setCreatedAt(string $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
 }

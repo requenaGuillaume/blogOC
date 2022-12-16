@@ -2,45 +2,46 @@
 
 namespace App\Entity;
 
-use DateTime;
 
 final class PostEntity extends AbstractEntity
 {
-    private int $id;
-    private array $comments;
+    private ?string $comments;
     private string $title;
     private int $authorId;
     private string $head;
-    private DateTime $lastUpdate;
+    private string $lastUpdate;
     private string $status;
     private string $content;
     private string $slug;
 
+    public const STATUS_DRAFT = 'draft';
+    public const STATUS_ONLINE = 'online';
 
-    public function setId(int $id): self
+
+    public function listProperties(): array
     {
-        $this->id = $id;
-        return $this;
+        $properties = [];
+        
+        foreach($this as $key => $value){
+            $properties[] = $key;
+        }
+
+        return $properties;
     }
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function setComments(array $comments): self
+    public function setComments($comments): self
     {
         $this->comments = $comments;
         return $this;
     }
     
-    public function addComments(array $comment): self
+    public function addComments($comment): self
     {
         $this->comments[] = $comment;
         return $this;
     }
 
-    public function getComments(): array
+    public function getComments(): ?string
     {
         return $this->comments;
     }
@@ -84,7 +85,7 @@ final class PostEntity extends AbstractEntity
         return $this;
     }
 
-    public function getLastUpdate(): DateTime
+    public function getLastUpdate(): string
     {
         return $this->lastUpdate;
     }
@@ -121,4 +122,5 @@ final class PostEntity extends AbstractEntity
     {
         return $this->slug;
     }
+
 }
