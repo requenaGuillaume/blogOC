@@ -25,15 +25,16 @@
 
     <?php 
 
+        require 'src/template/partial/header.phtml';
+
         if(isset($_SESSION['flash'])){
           foreach($_SESSION['flash'] as $bootstrapClass => $typeOfMessage){
             foreach($typeOfMessage as $message){
               echo "<div role='alert' class='alert alert-$bootstrapClass'><p>$message</p></div>";
             }
           }
+          unset($_SESSION['flash']);
         }
-
-        require 'src/template/partial/header.phtml';
 
         echo $pageContent;
 

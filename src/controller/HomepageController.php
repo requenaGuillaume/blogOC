@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-class HomepageController // extends AbstractController
+class HomepageController extends AbstractController
 {
-    public function run(): void
+    public function run()
     {
-        echo 'Test Router Homepage'; // test ok
+        return $this->render('HomepageTemplate');
     }
 }
