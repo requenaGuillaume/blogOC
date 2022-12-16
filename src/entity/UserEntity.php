@@ -10,6 +10,7 @@ final class UserEntity extends AbstractEntity
     private string $pseudo;
     private string $password;
 
+    // TODO : check enum php8
     public const ROLE_USER = 'user';
     public const ROLE_ADMIN = 'admin';
 
