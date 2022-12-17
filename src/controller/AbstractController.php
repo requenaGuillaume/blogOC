@@ -36,7 +36,7 @@ abstract class AbstractController
 
     protected function getUser(): ?UserEntity
     {
-        if($_SESSION['user']){
+        if(isset($_SESSION['user'])){
             return $_SESSION['user'];
         }
 

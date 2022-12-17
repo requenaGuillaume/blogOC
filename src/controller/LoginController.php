@@ -18,6 +18,7 @@ class LoginController extends AbstractFormController
     {
         if($_POST){
 
+            // TODO => add a ValidatorInterface ? and in method's signature type ValidatorInterface ???
             $validator = new ValidatorService();
             $formContainsError = $this->formHasError($validator);
 
