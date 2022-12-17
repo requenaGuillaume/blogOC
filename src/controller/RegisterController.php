@@ -43,7 +43,7 @@ class RegisterController extends AbstractFormController
             $userRepository->create($user);
 
             $this->addFlash('success', 'You succedeed to sign up !');
-            $this->redirect('http://blogoc/?page=homepage');
+            $this->redirect('http://blogoc/?page=login');
         }
 
         return $this->render('RegisterTemplate');
