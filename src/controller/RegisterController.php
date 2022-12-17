@@ -7,7 +7,7 @@ use App\Repository\UserRepository;
 use App\Service\NormalizerService;
 use App\Service\ValidatorService;
 
-class RegisterController extends AbstractController
+class RegisterController extends AbstractFormController
 {
 
     private const VALID_REGISTER_FIELDS_NAME = ['pseudo', 'email', 'pass', 'verifpass'];
@@ -15,69 +15,13 @@ class RegisterController extends AbstractController
 
     public function run()
     {
-        $errors = [];
-
         if($_POST){
 
-            if(count($_POST) !== 4){
-                $errors[] = 'We got less or more fields than 4';
-                print_r($errors);die();
-            }
-
-            foreach($_POST as $inputName => $inputValue){
-                
-                if(!in_array($inputName, self::VALID_REGISTER_FIELDS_NAME)){
-                    $errors[] = "Invalid input name : $inputName";
-                    print_r($errors);die();
-                }
-
-                if(isset($_POST[$inputName]) && empty($_POST[$inputName])){
-                    $errors[] = "Data missing in the field : $inputName";
-                    print_r($errors);die();
-                }
-            }
-            
             $validator = new ValidatorService();
+            $formContainsError = $this->formHasError($validator);
 
-            if(!$validator->checkLength($_POST['pseudo'], 2, 40)){
-                $errors[] = "Your pseudo length should be at least 2 characters and max 40 characters";
-                print_r($errors);die();
-            }
-
-            if(!$validator->checkLength($_POST['email'], 2, 40)){
-                $errors[] = "Your email length should be at least 2 characters and max 40 characters";
-                print_r($errors);die();
-            }
-
-            if(!$validator->checkLength($_POST['pass'], 6, 40)){
-                $errors[] = "Your pass length should be at least 6 characters and max 40 characters";
-                print_r($errors);die();
-            }
-
-            if($_POST['pass'] !== $_POST['verifpass'] ){
-                $errors[] = "Passwords fields does not match";
-                print_r($errors);die();
-            }
-
-            if(!$validator->checkValidity($_POST['pseudo'], UserEntity::REGEX_PSEUDO)){
-                $errors[] = "Your pseudo doesn't respect the format";
-                print_r($errors);die();
-            }
-
-            if(!$validator->checkValidity($_POST['email'], UserEntity::REGEX_EMAIL)){
-                $errors[] = "Your email doesn't respect the format";
-                print_r($errors);die();
-            }
-
-            if(
-                !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_1)
-                || !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_2)
-                || !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_3)
-                || !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_4)
-            ){
-                $errors[] = "Your pass should contain at least 1 min letter, 1 maj letter, 1 number 
-                             and one of the following special character [.#~+=*\-_+²$=¤]";
-                print_r($errors);die();
+            if($formContainsError){
+                return $this->render('RegisterTemplate');
             }
 
             $userEntity = new UserEntity();
@@ -90,27 +34,117 @@ class RegisterController extends AbstractController
             $user = $normalizer->denormalize($userEntity);
 
             $userRepository = new UserRepository();
-            $userPseudoAlreadyExist = $userRepository->findOneBy(['pseudo' => $userEntity->getPseudo()]);
-            $userEmailAlreadyExist = $userRepository->findOneBy(['mail' => $userEntity->getMail()]);
-
-            if($userPseudoAlreadyExist){
-                $errors[] = "The pseudo {$userEntity->getPseudo()} is already used";
-                print_r($errors);die();
-            }
+            $userEmailAlreadyExist = $this->userAlreadyExist($userRepository, $userEntity);
 
             if($userEmailAlreadyExist){
-                $errors[] = "The email {$userEntity->getMail()} is already used";
-                print_r($errors);die();
+                return $this->render('RegisterTemplate');
             }
 
             $userRepository->create($user);
-
 
             $this->addFlash('success', 'You succedeed to sign up !');
             $this->redirect('http://blogoc/?page=homepage');
         }
 
         return $this->render('RegisterTemplate');
+    }
+
+
+    private function formHasError(ValidatorService $validator): bool
+    {
+        $error = $this->verifyInputCount(count($_POST), 4);
+        if($error){
+            $this->addFlash('danger', $error);
+            return true;               
+        }
+
+        $error = $this->verifyInputsValidity($_POST, self::VALID_REGISTER_FIELDS_NAME);
+        if($error){
+            $this->addFlash('danger', $error); 
+            return true;                 
+        }
+
+        if($this->inputsHasDataLengthError($validator)){
+            return true;
+        }
+
+        if($_POST['pass'] !== $_POST['verifpass'] ){
+            $this->addFlash('danger', "Passwords fields does not match");  
+            return true;           
+        }
+
+        if($this->dataHasFormatError($validator)){
+            return true;
+        }
+
+        $error = $this->verifyPasswordFormat($validator);
+        if($error){
+            $this->addFlash('danger', $error);  
+            return true;                
+        }
+
+        return false;
+    }
+
+
+    private function userAlreadyExist(UserRepository $userRepository, UserEntity $userEntity): bool
+    {
+        $userPseudoAlreadyExist = $userRepository->findOneBy(['pseudo' => $userEntity->getPseudo()]);
+        $userEmailAlreadyExist = $userRepository->findOneBy(['mail' => $userEntity->getMail()]);
+
+        if($userPseudoAlreadyExist){
+            $this->addFlash('danger', "The pseudo {$userEntity->getPseudo()} is already used");
+            return true;
+        }
+
+        if($userEmailAlreadyExist){
+            $this->addFlash('danger', "The email {$userEntity->getMail()} is already used");
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private function inputsHasDataLengthError(ValidatorService $validator): bool
+    {
+        $error = $this->verifyDataLenght($validator, 'pseudo', 2, 40);
+        if($error){
+            $this->addFlash('danger', $error);  
+            return true;                
+        }
+
+        $error = $this->verifyDataLenght($validator, 'email', 2, 40);
+        if($error){
+            $this->addFlash('danger', $error);  
+            return true;                
+        }
+
+        $error = $this->verifyDataLenght($validator, 'pass', 6, 40);
+        if($error){
+            $this->addFlash('danger', $error);   
+            return true;               
+        }
+
+        return false;
+    }
+
+
+    private function dataHasFormatError(ValidatorService $validator): bool
+    {
+        $error = $this->verifyDataFormat($validator, 'pseudo', UserEntity::REGEX_PSEUDO);
+        if($error){
+            $this->addFlash('danger', $error);  
+            return true;                
+        }
+
+        $error = $this->verifyDataFormat($validator, 'email', UserEntity::REGEX_EMAIL);
+        if($error){
+            $this->addFlash('danger', $error);  
+            return true;                
+        }
+
+        return false;
     }
 
 }
