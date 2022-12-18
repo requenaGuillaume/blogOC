@@ -7,6 +7,7 @@ require_once 'vendor/autoload.php';
 final class Router 
 {    
     private const ROUTE = [
+        'admin' => 'Controller\AdminController',
         'homepage' => 'Controller\HomepageController',
         'post' => 'Controller\PostController',
         'register' => 'Controller\RegisterController',
