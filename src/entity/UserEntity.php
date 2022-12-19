@@ -10,6 +10,16 @@ final class UserEntity extends AbstractEntity
     private string $pseudo;
     private string $password;
 
+    // TODO : Enum => require PHP 8.1, i'm at 8.0.13
+    public const ROLE_USER = 'user';
+    public const ROLE_ADMIN = 'admin';
+
+    public const REGEX_PSEUDO = '/^[A-Za-z0-9]+[A-Za-z0-9-_]{0,}[A-Za-z0-9]+$/';
+    public const REGEX_EMAIL = "/^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@{1}[a-zA-Z0-9]+[-]{0,}[a-zA-Z0-9]+\.{1}[a-zA-Z]{2,}/";
+    public const REGEX_PASSWORD_1 = "/[a-z]{1}/";
+    public const REGEX_PASSWORD_2 = "/[A-Z]{1}/";
+    public const REGEX_PASSWORD_3 = "/[0-9]{1}/";
+    public const REGEX_PASSWORD_4 = "/[.#~+=*\-_+²$=¤]{1}/";
 
     public function listProperties(): array
     {

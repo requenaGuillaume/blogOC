@@ -21,13 +21,22 @@
         crossorigin="anonymous"
       />
   </head>
-  <body>
+  <body class="container">
 
     <?php 
 
         require 'src/template/partial/header.phtml';
 
-        echo '<main class="bg-primary">Test Main</main>'; // test bootstrap OK
+        if(isset($_SESSION['flash'])){
+          foreach($_SESSION['flash'] as $bootstrapClass => $typeOfMessage){
+            foreach($typeOfMessage as $message){
+              echo "<div role='alert' class='alert alert-$bootstrapClass'><p>$message</p></div>";
+            }
+          }
+          unset($_SESSION['flash']);
+        }
+
+        echo $pageContent;
 
         require 'src/template/partial/footer.phtml';
 

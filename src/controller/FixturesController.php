@@ -56,10 +56,10 @@ class FixturesController
 
         echo 'Beginning of the Fixtures<br><br>';
 
-        $this->createUsers('admin', 3);
+        $this->createUsers(UserEntity::ROLE_ADMIN, 3);
         echo 'Admin Fixtures Done !<br>';
 
-        $this->createUsers('user', 10);
+        $this->createUsers(UserEntity::ROLE_USER, 10);
         echo 'Users Fixtures Done !<br>';
 
         $this->createPosts(3);
@@ -120,7 +120,7 @@ class FixturesController
 
     private function createPosts(int $numberOfPostByAdmin): void
     {
-        $admins = $this->userRepository->findBy(['role' => 'admin']);
+        $admins = $this->userRepository->findBy(['role' => UserEntity::ROLE_ADMIN]);
 
         foreach($admins as $admin){
             for($p = 0; $p < $numberOfPostByAdmin; $p++){
@@ -145,7 +145,7 @@ class FixturesController
     private function createComments(): void
     {
         $posts = $this->postRepository->findAll();
-        $users = $this->userRepository->findBy(data: ['role' => 'user'], limit: 3);
+        $users = $this->userRepository->findBy(data: ['role' => UserEntity::ROLE_USER], limit: 3);
         
         foreach($posts as $post){
             $post = $this->normalizer->normalize($post, PostEntity::class);
