@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\UserEntity;
 
 abstract class AbstractController
 {
@@ -30,6 +31,16 @@ abstract class AbstractController
     protected function addFlash(string $bootstrapClass, string $message): void
     {
         $_SESSION['flash'][$bootstrapClass][] = $message;
+    }
+
+
+    protected function getUser(): ?UserEntity
+    {
+        if(isset($_SESSION['user'])){
+            return $_SESSION['user'];
+        }
+
+        return null;
     }
 
 }
