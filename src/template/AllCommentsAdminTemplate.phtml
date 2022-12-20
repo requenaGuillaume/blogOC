@@ -1,0 +1,40 @@
+<main>
+    <h1>CommentsAdminTemplate</h1>
+
+    <table>
+        <caption>Comments</caption>
+
+        <thead>
+            <th>id</th>
+            <th>status</th>
+            <th>post_id</th>
+            <th>author_id</th>
+            <th>content</th>
+            <th>created_at</th>
+            <th>supprimer</th>
+        </thead>
+
+        <?php foreach($comments as $comment){ ?>
+            <tr>
+                <td><?= $comment->getId(); ?></td>
+
+                <td>
+                    <?php if ($comment->getStatus() === 'waiting'){ ?>
+                        <button><a href="">valid</a></button>
+                        <button><a href="">invalid</a></button>
+                    <?php }else if ($comment->getStatus() === 'valid'){ ?>
+                        <button><a href="">invalid</a></button>
+                    <?php }else{ ?>
+                        <button><a href="">valid</a></button>
+                    <?php } ?>
+                </td>
+
+                <td><?= $comment->getPostId(); ?></td>
+                <td><?= $comment->getAuthorId(); ?></td>
+                <td><?= $comment->getContent(); ?></td>
+                <td><?= $comment->getCreatedAt(); ?></td>
+                <td><a href="#"><i class="fa-solid fa-trash"></i></a></td>
+            </tr>
+        <?php } ?>
+    </table>
+</main>

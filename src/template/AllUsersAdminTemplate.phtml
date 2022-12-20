@@ -1,0 +1,31 @@
+<main>
+    <table>
+        <caption>Users</caption>
+
+        <thead>
+            <th>id</th>
+            <th>role</th>
+            <th>pseudo</th>
+            <th>email</th>
+            <th>change role</th>
+            <th>supprimer</th>
+        </thead>
+
+        <?php foreach($users as $user){ ?>
+            <tr>
+                <td><?= $user->getId(); ?></td>
+                <td><?= $user->getRole(); ?></td>
+                <td><?= $user->getPseudo(); ?></td>
+                <td><?= $user->getMail(); ?></td>
+                <td>
+                    <?php if($user->getRole() === 'user'){ ?>
+                        <button><a href="">admin</a></button>
+                    <?php }else{ ?>
+                        <button><a href="">user</a></button>
+                    <?php } ?>
+                </td>
+                <td><a href="#"><i class="fa-solid fa-trash"></i></a></td>
+            </tr>
+        <?php } ?>
+    </table>
+</main>

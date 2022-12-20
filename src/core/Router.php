@@ -8,6 +8,9 @@ final class Router
 {    
     private const ROUTE = [
         'admin' => 'Controller\AdminController',
+        'admin-user' => 'Controller\UserAdminController',
+        'admin-post' => 'Controller\PostAdminController',
+        'admin-comment' => 'Controller\CommentAdminController',
         'homepage' => 'Controller\HomepageController',
         'post' => 'Controller\PostController',
         'register' => 'Controller\RegisterController',
@@ -18,6 +21,7 @@ final class Router
 
     private const METHOD = [
         'create' => 'create',
+        'show' => 'show',
         'update' => 'update',
         'delete' => 'delete'
     ];
