@@ -1,16 +1,14 @@
-<main>
-    <div class="d-flex flex-wrap justify-content-between">
-        <?php foreach($posts as $post){ ?>
-            <div class="card" style="width:18rem;">
-                <img src="#" class="card-img-top" alt="">
-                <div class="card-body">
-                    <h5 class="card-title"><?= $post->getTitle() ?></h5>
-                    <p class="card-text text-truncate"><?= $post->getContent() ?></p>
-                    <a href="http://blogoc/?page=post&action=show&id=<?= $post->getId() ?>" class="btn btn-primary">
-                        Liens vers l'article
-                    </a>
-                </div>
+<div class="d-flex flex-wrap justify-content-between">
+    <?php foreach($posts as $post){ ?>
+        <div class="card" style="width:18rem;">
+            <img src="#" class="card-img-top" alt="">
+            <div class="card-body">
+                <h5 class="card-title"><?= $post->getTitle() ?></h5>
+                <p class="card-text text-truncate"><?= $post->getContent() ?></p>
+                <a href="http://blogoc/?page=post&action=show&id=<?= $post->getId() ?>" class="btn btn-primary">
+                    Liens vers l'article
+                </a>
             </div>
-        <?php } ?>
-    </div>
-</main>
+        </div>
+    <?php } ?>
+</div>

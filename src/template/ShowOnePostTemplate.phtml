@@ -1,19 +1,17 @@
-<main>
-    <div>
-        <h1><?= $post->getTitle() ?></h1>
-        <p>Crée par <?= $author->getPseudo() ?> (last update : <?= $post->getLastUpdate() ?>)</p>
-        <p><?= $post->getContent() ?></p>
-    </div>
+<div>
+    <h1><?= $post->getTitle() ?></h1>
+    <p>Crée par <?= $author->getPseudo() ?> (last update : <?= $post->getLastUpdate() ?>)</p>
+    <p><?= $post->getContent() ?></p>
+</div>
 
-    <div>
-        <?php foreach($comments as $commentInfos){ 
-            $comment = $commentInfos['comment'];
-            $commentAuthor = $commentInfos['author'];
-        ?>
-            <div>
-                <p class="fw-bold"><?= $commentAuthor->getPseudo() ?> written at <?= $comment->getCreatedAt() ?></p>
-                <p><?= $comment->getContent() ?></p>
-            </div>
-        <?php } ?>
-    </div>
-</main>
+<div>
+    <?php foreach($comments as $commentInfos){ 
+        $comment = $commentInfos['comment'];
+        $commentAuthor = $commentInfos['author'];
+    ?>
+        <div>
+            <p class="fw-bold"><?= $commentAuthor->getPseudo() ?> written at <?= $comment->getCreatedAt() ?></p>
+            <p><?= $comment->getContent() ?></p>
+        </div>
+    <?php } ?>
+</div>

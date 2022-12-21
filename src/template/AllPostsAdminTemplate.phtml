@@ -1,37 +1,35 @@
-<main>
-    <table>
-        <caption>Posts</caption>
+<table>
+    <caption>Posts</caption>
 
-        <thead>
-            <th>id</th>
-            <th>id auteur</th>
-            <th>statut</th>
-            <th>titre</th>
-            <th>slug</th>
-            <th>change statut</th>
-            <th>supprimer</th>
-        </thead>
+    <thead>
+        <th>id</th>
+        <th>id auteur</th>
+        <th>statut</th>
+        <th>titre</th>
+        <th>slug</th>
+        <th>change statut</th>
+        <th>supprimer</th>
+    </thead>
 
-        <?php foreach($posts as $post){ ?>
-            <tr>
-                <td>
-                    <a href="http://blogoc/?page=post&action=show&id=<?= $post->getId(); ?>">
-                        <?= $post->getId(); ?>
-                    </a>                    
-                </td>
-                <td><?= $post->getAuthorId(); ?></td>
-                <td><?= $post->getStatus(); ?></td>
-                <td><?= $post->getTitle(); ?></td>
-                <td><?= $post->getSlug(); ?></td>
-                <td>
-                    <?php if($post->getStatus() === 'draft'){ ?>
-                        <button><a href="">online</a></button>
-                    <?php }else{ ?>
-                        <button><a href="">draft</a></button>
-                    <?php } ?>
-                </td>
-                <td><a href="#"><i class="fa-solid fa-trash"></i></a></td>
-            </tr>
-        <?php } ?>
-    </table>
-</main>    
+    <?php foreach($posts as $post){ ?>
+        <tr>
+            <td>
+                <a href="http://blogoc/?page=post&action=show&id=<?= $post->getId(); ?>">
+                    <?= $post->getId(); ?>
+                </a>                    
+            </td>
+            <td><?= $post->getAuthorId(); ?></td>
+            <td><?= $post->getStatus(); ?></td>
+            <td><?= $post->getTitle(); ?></td>
+            <td><?= $post->getSlug(); ?></td>
+            <td>
+                <?php if($post->getStatus() === 'draft'){ ?>
+                    <button><a href="">online</a></button>
+                <?php }else{ ?>
+                    <button><a href="">draft</a></button>
+                <?php } ?>
+            </td>
+            <td><a href="#"><i class="fa-solid fa-trash"></i></a></td>
+        </tr>
+    <?php } ?>
+</table>  
