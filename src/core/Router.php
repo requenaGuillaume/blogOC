@@ -7,12 +7,11 @@ require_once 'vendor/autoload.php';
 final class Router 
 {    
     private const ROUTE = [
-        'admin' => 'Controller\AdminController',
-        'admin-user' => 'Controller\UserAdminController',
-        'admin-post' => 'Controller\PostAdminController',
-        'admin-comment' => 'Controller\CommentAdminController',
         'homepage' => 'Controller\HomepageController',
+        'admin' => 'Controller\AdminController',
+        'user' => 'Controller\UserController',
         'post' => 'Controller\PostController',
+        'comment' => 'Controller\CommentController',
         'register' => 'Controller\RegisterController',
         'login' => 'Controller\LoginController',
         'logout' => 'Controller\LogoutController',
@@ -23,7 +22,8 @@ final class Router
         'create' => 'create',
         'show' => 'show',
         'update' => 'update',
-        'delete' => 'delete'
+        'delete' => 'delete',
+        'admin' => 'admin'
     ];
 
     public function route(): void 

@@ -14,7 +14,11 @@
 
         <?php foreach($posts as $post){ ?>
             <tr>
-                <td><?= $post->getId(); ?></td>
+                <td>
+                    <a href="http://blogoc/?page=post&action=show&id=<?= $post->getId(); ?>">
+                        <?= $post->getId(); ?>
+                    </a>                    
+                </td>
                 <td><?= $post->getAuthorId(); ?></td>
                 <td><?= $post->getStatus(); ?></td>
                 <td><?= $post->getTitle(); ?></td>

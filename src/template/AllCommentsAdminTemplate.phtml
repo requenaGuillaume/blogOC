@@ -16,7 +16,11 @@
 
         <?php foreach($comments as $comment){ ?>
             <tr>
-                <td><?= $comment->getId(); ?></td>
+                <td>
+                    <a href="http://blogoc/?page=post&action=show&id=<?= $comment->getPostId(); ?>">
+                        <?= $comment->getId(); ?>
+                    </a>
+                </td>
 
                 <td>
                     <?php if ($comment->getStatus() === 'waiting'){ ?>
