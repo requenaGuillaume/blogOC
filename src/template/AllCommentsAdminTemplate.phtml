@@ -1,8 +1,6 @@
-<h1>CommentsAdminTemplate</h1>
+<h1 class="text-center mt-3 mb-5">Comments</h1>
 
-<table>
-    <caption>Comments</caption>
-
+<table class="table table-dark table-striped">
     <thead>
         <th>id</th>
         <th>status</th>
@@ -10,33 +8,55 @@
         <th>author_id</th>
         <th>content</th>
         <th>created_at</th>
+        <th>change status</th>
         <th>supprimer</th>
     </thead>
 
     <?php foreach($comments as $comment){ ?>
         <tr>
             <td>
-                <a href="http://blogoc/?page=post&action=show&id=<?= $comment->getPostId(); ?>">
+                <a href="http://blogoc/?page=post&action=show&id=<?= $comment->getPostId(); ?>"
+                   class="link-info text-decoration-none">
                     <?= $comment->getId(); ?>
                 </a>
             </td>
 
-            <td>
-                <?php if ($comment->getStatus() === 'waiting'){ ?>
-                    <button><a href="">valid</a></button>
-                    <button><a href="">invalid</a></button>
-                <?php }else if ($comment->getStatus() === 'valid'){ ?>
-                    <button><a href="">invalid</a></button>
-                <?php }else{ ?>
-                    <button><a href="">valid</a></button>
-                <?php } ?>
+            <td class="text-<?php 
+                    if($comment->getStatus() === 'valid'){ echo 'success';}
+                    elseif($comment->getStatus() === 'invalid'){ echo 'danger';}
+                    else{ echo 'light'; }
+                ?>">
+                <?= ucfirst($comment->getStatus()) ?>
             </td>
-
-            <td><?= $comment->getPostId(); ?></td>
-            <td><?= $comment->getAuthorId(); ?></td>
+            <td>
+                <a href="http://blogoc/?page=post&action=show&id=<?= $comment->getPostId(); ?>" 
+                       class="link-primary text-decoration-none">
+                        <?= $comment->getPostId(); ?>
+                </a> 
+            </td>
+            <td>
+                <a href="http://blogoc/?page=user&action=show&id=<?= $comment->getAuthorId(); ?>" 
+                       class="link-primary text-decoration-none">
+                        <?= $comment->getAuthorId(); ?>
+                </a> 
+            </td>
             <td><?= $comment->getContent(); ?></td>
             <td><?= $comment->getCreatedAt(); ?></td>
-            <td><a href="#"><i class="fa-solid fa-trash"></i></a></td>
+            <td>
+                <?php if ($comment->getStatus() === 'waiting'){ ?>
+                    <a href="" class="btn btn-success d-block">valid</a>
+                    <a href="" class="btn btn-warning d-block mt-1">invalid</a>
+                <?php }else if ($comment->getStatus() === 'valid'){ ?>
+                    <a href="" class="btn btn-warning d-block">invalid</a>
+                <?php }else{ ?>
+                    <a href="" class="btn btn-success d-block">valid</a>
+                <?php } ?>
+            </td>
+            <td>
+                <a href="http://blogoc/?page=comment&action=delete&id=<?= $comment->getId() ?>" class="btn btn-danger d-block">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
+            </td>
         </tr>
     <?php } ?>
 </table>

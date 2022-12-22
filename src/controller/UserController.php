@@ -64,6 +64,8 @@ class UserController extends AbstractController
             if(!$id){
                 return $this->render('404Template');
             }
+        }else{
+            return $this->render('404Template');
         }
 
         $userRepository = new UserRepository();
@@ -79,7 +81,7 @@ class UserController extends AbstractController
         $userRepository->delete($id);
 
         $this->addFlash('success', "The user n°{$userArray['id']} has been deleted");
-        $this->redirect('http://blogoc/?page=homepage');
+        $this->redirect('http://blogoc/?page=user&action=admin');
     }
 
 

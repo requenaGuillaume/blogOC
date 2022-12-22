@@ -1,6 +1,5 @@
-<table>
-    <caption>Posts</caption>
-
+<h1 class="text-center mt-3 mb-5">Articles</h1>
+<table class="table table-dark table-striped table-hover">
     <thead>
         <th>id</th>
         <th>id auteur</th>
@@ -14,22 +13,37 @@
     <?php foreach($posts as $post){ ?>
         <tr>
             <td>
-                <a href="http://blogoc/?page=post&action=show&id=<?= $post->getId(); ?>">
+                <a href="http://blogoc/?page=post&action=show&id=<?= $post->getId(); ?>"
+                   class="link-info text-decoration-none">
                     <?= $post->getId(); ?>
                 </a>                    
             </td>
-            <td><?= $post->getAuthorId(); ?></td>
-            <td><?= $post->getStatus(); ?></td>
+            <td>
+                <a href="http://blogoc/?page=user&action=show&id=<?= $post->getAuthorId(); ?>"
+                   class="link-primary text-decoration-none">
+                    <?= $post->getAuthorId(); ?>
+                </a> 
+            </td>
+            <td class="text-<?php 
+                    if($post->getStatus() === 'online'){ echo 'info';}
+                    else{ echo 'warning';}
+                ?>">
+                <?= ucfirst($post->getStatus()) ?>                
+            </td>
             <td><?= $post->getTitle(); ?></td>
             <td><?= $post->getSlug(); ?></td>
             <td>
                 <?php if($post->getStatus() === 'draft'){ ?>
-                    <button><a href="">online</a></button>
+                    <a href="" class="btn btn-info d-block">online</a>
                 <?php }else{ ?>
-                    <button><a href="">draft</a></button>
+                    <a href="" class="btn btn-warning d-block">draft</a>
                 <?php } ?>
             </td>
-            <td><a href="#"><i class="fa-solid fa-trash"></i></a></td>
+            <td>
+                <a href="http://blogoc/?page=post&action=delete&id=<?= $post->getId() ?>" class="btn btn-danger d-block">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
+            </td>
         </tr>
     <?php } ?>
 </table>  

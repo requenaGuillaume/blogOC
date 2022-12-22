@@ -46,6 +46,8 @@ class CommentController extends AbstractController
             if(!$id){
                 return $this->render('404Template');
             }
+        }else{
+            return $this->render('404Template');
         }
 
         $commentRepository = new CommentRepository();
@@ -61,7 +63,7 @@ class CommentController extends AbstractController
         $commentRepository->delete($id);
 
         $this->addFlash('success', "The comment n°{$commentArray['id']} has been deleted");
-        $this->redirect('http://blogoc/?page=homepage');
+        $this->redirect('http://blogoc/?page=comment&action=admin');
     }
 
 

@@ -103,12 +103,20 @@ class PostController extends AbstractController
 
     public function create()
     {
+        // code
+    }
+
+
+    public function delete()
+    {
         if(isset($_GET['id']) && !empty($_GET['id'])){
             $id = intval($_GET['id']);
 
             if(!$id){
                 return $this->render('404Template');
             }
+        }else{
+            return $this->render('404Template');
         }
 
         $postRepository = new PostRepository();
@@ -124,13 +132,7 @@ class PostController extends AbstractController
         $postRepository->delete($id);
 
         $this->addFlash('success', "The post n°{$postArray['id']} has been deleted");
-        $this->redirect('http://blogoc/?page=homepage');
-    }
-
-
-    public function delete()
-    {
-        // code
+        $this->redirect('http://blogoc/?page=post&action=admin');
     }
 
 
