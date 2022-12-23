@@ -12,24 +12,24 @@
     <?php foreach($users as $user){ ?>
         <tr>
             <td>
-                    <a href="http://blogoc/?page=user&action=show&id=<?= $user->getId(); ?>" 
-                       class="link-info text-decoration-none">
-                        <?= $user->getId(); ?>
-                    </a>   
+                <a href="http://blogoc/?page=user&action=show&id=<?= $user->getId(); ?>"
+                    class="link-info text-decoration-none">
+                    <?= $user->getId(); ?>
+                </a>
             </td>
-            <td class="text-<?php 
+            <td class="text-<?php
                     if($user->getRole() === 'admin'){ echo 'success';}
                     else{ echo 'primary';}
                 ?>">
-                <?= ucfirst($user->getRole()) ?>                
+                <?= ucfirst($user->getRole()) ?>           
             </td>
             <td><?= $user->getPseudo(); ?></td>
             <td><?= $user->getMail(); ?></td>
             <td>
                 <?php if($user->getRole() === 'user'){ ?>
-                    <a href="" class="btn btn-success d-block">admin</a>
+                    <a href="http://blogoc/?page=user&action=update&id=<?= $user->getId() ?>" class="btn btn-success d-block">admin</a>
                 <?php }else{ ?>
-                    <a href="" class="btn btn-primary d-block">user</a>
+                    <a href="http://blogoc/?page=user&action=update&id=<?= $user->getId() ?>" class="btn btn-primary d-block">user</a>
                 <?php } ?>
             </td>
             <td>

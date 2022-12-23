@@ -138,6 +138,41 @@ class PostController extends AbstractController
 
     public function update()
     {
-        // code
+        if(isset($_GET['id']) && !empty($_GET['id'])){
+            $id = intval($_GET['id']);
+
+            if(!$id){
+                return $this->render('404Template');
+            }
+        }else{
+            return $this->render('404Template');
+        }
+
+        $postRepository = new PostRepository();
+        $postArray = $postRepository->find($id);
+
+        // if admin or current user....
+
+        if(!$postArray){
+            $this->addFlash('danger', 'This post does not exist');
+            $this->redirect('http://blogoc/?page=post&action=admin');
+        }
+
+        $normalizer = new NormalizerService();
+        $newInfos = [];
+        $post = $normalizer->normalize($postArray, PostEntity::class);
+
+        $currentStatus = $post->getStatus();
+
+        if($currentStatus === PostEntity::STATUS_DRAFT){
+            $newInfos = ['status' => PostEntity::STATUS_ONLINE];
+        }else{
+            $newInfos = ['status' => PostEntity::STATUS_DRAFT];
+        }
+
+        $postRepository->update($newInfos, $id);
+
+        $this->addFlash('success', "The post n°$id has been updated");
+        $this->redirect('http://blogoc/?page=post&action=admin');
     }
 }

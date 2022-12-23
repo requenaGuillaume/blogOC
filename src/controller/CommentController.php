@@ -69,7 +69,44 @@ class CommentController extends AbstractController
 
     public function update()
     {
-        // code
+        if(isset($_GET['id']) && !empty($_GET['id'])){
+            $id = intval($_GET['id']);
+
+            if(!$id){
+                return $this->render('404Template');
+            }
+        }else{
+            return $this->render('404Template');
+        }
+
+        $commentRepository = new CommentRepository();
+        $commentArray = $commentRepository->find($id);
+
+        // if admin or current user....
+
+        if(!$commentArray){
+            $this->addFlash('danger', 'This comment does not exist');
+            $this->redirect('http://blogoc/?page=comment&action=admin');
+        }
+
+        $normalizer = new NormalizerService();
+        $newInfos = [];
+        $comment = $normalizer->normalize($commentArray, CommentEntity::class);
+
+        $nextStatus = $_GET['status'];
+
+        if($nextStatus === CommentEntity::STATUS_VALID){
+            $newInfos = ['status' => CommentEntity::STATUS_VALID];
+        }
+
+        if($nextStatus === CommentEntity::STATUS_INVALID){
+            $newInfos = ['status' => CommentEntity::STATUS_INVALID];
+        }
+
+        $commentRepository->update($newInfos, $id);
+
+        $this->addFlash('success', "The comment n°{$comment->getId()} has been deleted");
+        $this->redirect('http://blogoc/?page=comment&action=admin');
     }
 
 }

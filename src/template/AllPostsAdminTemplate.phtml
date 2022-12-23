@@ -16,27 +16,27 @@
                 <a href="http://blogoc/?page=post&action=show&id=<?= $post->getId(); ?>"
                    class="link-info text-decoration-none">
                     <?= $post->getId(); ?>
-                </a>                    
+                </a>
             </td>
             <td>
                 <a href="http://blogoc/?page=user&action=show&id=<?= $post->getAuthorId(); ?>"
                    class="link-primary text-decoration-none">
                     <?= $post->getAuthorId(); ?>
-                </a> 
+                </a>
             </td>
             <td class="text-<?php 
                     if($post->getStatus() === 'online'){ echo 'info';}
                     else{ echo 'warning';}
                 ?>">
-                <?= ucfirst($post->getStatus()) ?>                
+                <?= ucfirst($post->getStatus()) ?>             
             </td>
             <td><?= $post->getTitle(); ?></td>
             <td><?= $post->getSlug(); ?></td>
             <td>
                 <?php if($post->getStatus() === 'draft'){ ?>
-                    <a href="" class="btn btn-info d-block">online</a>
+                    <a href="http://blogoc/?page=post&action=update&id=<?= $post->getId() ?>" class="btn btn-info d-block">online</a>
                 <?php }else{ ?>
-                    <a href="" class="btn btn-warning d-block">draft</a>
+                    <a href="http://blogoc/?page=post&action=update&id=<?= $post->getId() ?>" class="btn btn-warning d-block">draft</a>
                 <?php } ?>
             </td>
             <td>

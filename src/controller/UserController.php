@@ -87,7 +87,42 @@ class UserController extends AbstractController
 
     public function update()
     {
-        // code
+        if(isset($_GET['id']) && !empty($_GET['id'])){
+            $id = intval($_GET['id']);
+
+            if(!$id){
+                return $this->render('404Template');
+            }
+        }else{
+            return $this->render('404Template');
+        }
+
+        $userRepository = new UserRepository();
+        $userArray = $userRepository->find($id);
+
+        // if admin or current user....
+
+        if(!$userArray){
+            $this->addFlash('danger', 'This user does not exist');
+            $this->redirect('http://blogoc/?page=user&action=admin');
+        }
+
+        $normalizer = new NormalizerService();
+        $newInfos = [];
+        $user = $normalizer->normalize($userArray, UserEntity::class);
+
+        $currentUserRole = $user->getRole();
+
+        if($currentUserRole === UserEntity::ROLE_USER){
+            $newInfos = ['role' => UserEntity::ROLE_ADMIN];
+        }else{
+            $newInfos = ['role' => UserEntity::ROLE_USER];
+        }
+
+        $userRepository->update($newInfos, $id);
+
+        $this->addFlash('success', "Role of the user n°$id has been changed");
+        $this->redirect('http://blogoc/?page=user&action=admin');
     }
 
 }
