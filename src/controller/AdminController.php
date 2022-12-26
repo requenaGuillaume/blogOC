@@ -54,8 +54,8 @@ class AdminController extends AbstractController
         $entitiesInArray = $repository->findAll();
         $entities = [];
 
-        foreach($entitiesInArray as $commentInArray){
-            $entities[] = $normalizer->normalize($commentInArray, $entityClassName);
+        foreach($entitiesInArray as $entityInArray){
+            $entities[] = $normalizer->normalize($entityInArray, $entityClassName);
         }
 
         return $entities;
