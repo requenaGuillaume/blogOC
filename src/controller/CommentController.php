@@ -16,18 +16,9 @@ class CommentController extends AdminController
     }
 
 
-    public function admin()
+    public function list()
     {
-        $normalizer = new NormalizerService();
-        $commentRepository = new CommentRepository();
-
-        $commentsArray = $commentRepository->findAll();
-        $comments = [];
-
-        foreach($commentsArray as $commentInArray){
-            $comments[] = $normalizer->normalize($commentInArray, CommentEntity::class);
-        }
-
+        $comments = $this->getAll(CommentRepository::class);
         return $this->render('AllCommentsAdminTemplate', ['comments' => $comments]);
     }
 
@@ -56,24 +47,22 @@ class CommentController extends AdminController
 
     public function update()
     {
-        if(isset($_GET['id']) && !empty($_GET['id'])){
-            $id = intval($_GET['id']);
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
+        }
 
-            if(!$id){
-                return $this->render('404Template');
-            }
-        }else{
+        $id = $this->getIdFromUrl();
+
+        if(!$id){
             return $this->render('404Template');
         }
 
         $commentRepository = new CommentRepository();
         $commentArray = $commentRepository->find($id);
 
-        // if admin or current user....
-
         if(!$commentArray){
             $this->addFlash('danger', 'This comment does not exist');
-            $this->redirect('http://blogoc/?page=comment&action=admin');
+            $this->redirect('http://blogoc/?page=comment&action=list');
         }
 
         $normalizer = new NormalizerService();
@@ -92,8 +81,8 @@ class CommentController extends AdminController
 
         $commentRepository->update($newInfos, $id);
 
-        $this->addFlash('success', "The comment n°{$comment->getId()} has been deleted");
-        $this->redirect('http://blogoc/?page=comment&action=admin');
+        $this->addFlash('success', "The comment n°{$comment->getId()} has been updated");
+        $this->redirect('http://blogoc/?page=comment&action=list');
     }
 
 }

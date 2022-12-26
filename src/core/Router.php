@@ -23,7 +23,7 @@ final class Router
         'show' => 'show',
         'update' => 'update',
         'delete' => 'delete',
-        'admin' => 'admin'
+        'list' => 'list'
     ];
 
     public function route(): void 

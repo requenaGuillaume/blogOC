@@ -16,44 +16,37 @@ class UserController extends AdminController
     }
 
 
-    public function admin()
+    public function list()
     {
-        $normalizer = new NormalizerService();
-        $userRepository = new UserRepository();
-
-        $usersArray = $userRepository->findAll();
-        $users = [];
-
-        foreach($usersArray as $userInArray){
-            $users[] = $normalizer->normalize($userInArray, UserEntity::class);
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
         }
 
+        $users = $this->getAll(UserRepository::class);
         return $this->render('AllUsersAdminTemplate', ['users' => $users]);
     }
 
 
     public function show()
     {
-        if(isset($_GET['id']) && !empty($_GET['id'])){
-            $id = intval($_GET['id']);
+        $id = $this->getIdFromUrl();
 
-            if(!$id){
-                return $this->render('404Template');
-            }
-
-            $userRepository = new UserRepository();
-            $userArray = $userRepository->find($id);
-
-            if(!$userArray){
-                $this->addFlash('danger', 'This user does not exist');
-                $this->redirect('http://blogoc/?page=homepage');
-            }
-
-            $normalizer = new NormalizerService();
-            $user = $normalizer->normalize($userArray, UserEntity::class);
-
-            return $this->render('UserProfilTemplate', ['user' => $user]);
+        if(!$id){
+            return $this->render('404Template');
         }
+
+        $userRepository = new UserRepository();
+        $userArray = $userRepository->find($id);
+
+        if(!$userArray){
+            $this->addFlash('danger', 'This user does not exist');
+            $this->redirect('http://blogoc/?page=homepage');
+        }
+
+        $normalizer = new NormalizerService();
+        $user = $normalizer->normalize($userArray, UserEntity::class);
+
+        return $this->render('UserProfilTemplate', ['user' => $user]);
     }
 
 
@@ -75,24 +68,22 @@ class UserController extends AdminController
 
     public function update()
     {
-        if(isset($_GET['id']) && !empty($_GET['id'])){
-            $id = intval($_GET['id']);
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
+        }
 
-            if(!$id){
-                return $this->render('404Template');
-            }
-        }else{
+        $id = $this->getIdFromUrl();
+
+        if(!$id){
             return $this->render('404Template');
         }
 
         $userRepository = new UserRepository();
         $userArray = $userRepository->find($id);
 
-        // if admin or current user....
-
         if(!$userArray){
             $this->addFlash('danger', 'This user does not exist');
-            $this->redirect('http://blogoc/?page=user&action=admin');
+            $this->redirect('http://blogoc/?page=user&action=list');
         }
 
         $normalizer = new NormalizerService();
@@ -109,8 +100,8 @@ class UserController extends AdminController
 
         $userRepository->update($newInfos, $id);
 
-        $this->addFlash('success', "Role of the user n°$id has been changed");
-        $this->redirect('http://blogoc/?page=user&action=admin');
+        $this->addFlash('success', "Role of the user n°$id has been updated");
+        $this->redirect('http://blogoc/?page=user&action=list');
     }
 
 }

@@ -32,72 +32,59 @@ class PostController extends AdminController
 
     public function show()
     {
-        if(isset($_GET['id']) && !empty($_GET['id'])){
-            $id = intval($_GET['id']);
+        $id = $this->getIdFromUrl();
 
-            if(!$id){
-                return $this->render('404Template');
-            }
-            
-            $postRepository = new PostRepository();            
-            $postArray = $postRepository->find($id);            
-
-            if(!$postArray){
-                $this->addFlash('danger', 'This post doesn\'t exist');
-                $this->redirect('http://blogoc/?page=post');
-            }
-
-            $normalizer = new NormalizerService();
-            $post = $normalizer->normalize($postRepository->find($id), PostEntity::class);
-
-            $userRepository = new UserRepository();
-            $authorArray = $userRepository->find($post->getAuthorId());
-
-            if($authorArray){
-                $author = $normalizer->normalize($authorArray, UserEntity::class);
-            }else{
-                $author = new UserEntity();
-                $author->setPseudo('Unknown');
-            }
-
-            $commentRepository = new CommentRepository();
-            $commentsArray = $commentRepository->findBy(['post_id' => $post->getId()]);
-            $comments = [];
-
-            foreach($commentsArray as $commentArray){
-
-                $comment = $normalizer->normalize($commentArray, CommentEntity::class);
-                $author = $normalizer->normalize($userRepository->find($comment->getAuthorId()), UserEntity::class);
-
-                $comments[] = [
-                    'comment' => $comment,
-                    'author' => $author 
-                ];
-            }
-
-            return $this->render('ShowOnePostTemplate', [
-                'post' => $post,
-                'author' => $author,
-                'comments' => $comments
-            ]);
+        if(!$id){
+            return $this->render('404Template');
         }
-        
-        return $this->render('404Template');       
+            
+        $postRepository = new PostRepository();            
+        $postArray = $postRepository->find($id);            
+
+        if(!$postArray){
+            $this->addFlash('danger', 'This post doesn\'t exist');
+            $this->redirect('http://blogoc/?page=post');
+        }
+
+        $normalizer = new NormalizerService();
+        $post = $normalizer->normalize($postRepository->find($id), PostEntity::class);
+
+        $userRepository = new UserRepository();
+        $authorArray = $userRepository->find($post->getAuthorId());
+
+        if($authorArray){
+            $author = $normalizer->normalize($authorArray, UserEntity::class);
+        }else{
+            $author = new UserEntity();
+            $author->setPseudo('Unknown');
+        }
+
+        $commentRepository = new CommentRepository();
+        $commentsArray = $commentRepository->findBy(['post_id' => $post->getId()]);
+        $comments = [];
+
+        foreach($commentsArray as $commentArray){
+
+            $comment = $normalizer->normalize($commentArray, CommentEntity::class);
+            $author = $normalizer->normalize($userRepository->find($comment->getAuthorId()), UserEntity::class);
+
+            $comments[] = [
+                'comment' => $comment,
+                'author' => $author 
+            ];
+        }
+
+        return $this->render('ShowOnePostTemplate', [
+            'post' => $post,
+            'author' => $author,
+            'comments' => $comments
+        ]);     
     }
 
 
-    public function admin()
+    public function list()
     {
-        $normalizer = new NormalizerService();
-        $postRepository = new PostRepository();
-
-        $postsArray =  $postRepository->findAll();
-        $posts = [];
-
-        foreach($postsArray as $postInArray){
-            $posts[] = $normalizer->normalize($postInArray, PostEntity::class);
-        }
-
+        $posts = $this->getAll(PostRepository::class);
         return $this->render('AllPostsAdminTemplate', ['posts' => $posts]);
     }
 
@@ -126,13 +113,13 @@ class PostController extends AdminController
 
     public function update()
     {
-        if(isset($_GET['id']) && !empty($_GET['id'])){
-            $id = intval($_GET['id']);
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
+        }
 
-            if(!$id){
-                return $this->render('404Template');
-            }
-        }else{
+        $id = $this->getIdFromUrl();
+
+        if(!$id){
             return $this->render('404Template');
         }
 
@@ -143,7 +130,7 @@ class PostController extends AdminController
 
         if(!$postArray){
             $this->addFlash('danger', 'This post does not exist');
-            $this->redirect('http://blogoc/?page=post&action=admin');
+            $this->redirect('http://blogoc/?page=post&action=list');
         }
 
         $normalizer = new NormalizerService();
@@ -161,6 +148,6 @@ class PostController extends AdminController
         $postRepository->update($newInfos, $id);
 
         $this->addFlash('success', "The post n°$id has been updated");
-        $this->redirect('http://blogoc/?page=post&action=admin');
+        $this->redirect('http://blogoc/?page=post&action=list');
     }
 }
