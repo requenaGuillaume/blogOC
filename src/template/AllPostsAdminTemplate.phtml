@@ -10,40 +10,46 @@
         <th>supprimer</th>
     </thead>
 
-    <?php foreach($posts as $post){ ?>
+    <tbody>
+        <?php foreach($posts as $post){ 
+            $postId = $post->getId();
+            $authorId = $post->getAuthorId();
+            $status = $post->getStatus();
+        ?>
         <tr>
             <td>
-                <a href="http://blogoc/?page=post&action=show&id=<?= $post->getId(); ?>"
+                <a href="http://blogoc/?page=post&action=show&id=<?= $postId ?>"
                    class="link-info text-decoration-none">
-                    <?= $post->getId(); ?>
+                    <?= $postId ?>
                 </a>
             </td>
             <td>
-                <a href="http://blogoc/?page=user&action=show&id=<?= $post->getAuthorId(); ?>"
+                <a href="http://blogoc/?page=user&action=show&id=<?= $authorId ?>"
                    class="link-primary text-decoration-none">
-                    <?= $post->getAuthorId(); ?>
+                    <?= $authorId ?>
                 </a>
             </td>
             <td class="text-<?php 
-                    if($post->getStatus() === 'online'){ echo 'info';}
+                    if($status === 'online'){ echo 'info';}
                     else{ echo 'warning';}
                 ?>">
-                <?= ucfirst($post->getStatus()) ?>             
+                <?= ucfirst($status) ?>             
             </td>
             <td><?= $post->getTitle(); ?></td>
             <td><?= $post->getSlug(); ?></td>
             <td>
-                <?php if($post->getStatus() === 'draft'){ ?>
-                    <a href="http://blogoc/?page=post&action=update&id=<?= $post->getId() ?>" class="btn btn-info d-block">online</a>
+                <?php if($status === 'draft'){ ?>
+                    <a href="http://blogoc/?page=post&action=update&id=<?= $postId ?>" class="btn btn-info d-block">online</a>
                 <?php }else{ ?>
-                    <a href="http://blogoc/?page=post&action=update&id=<?= $post->getId() ?>" class="btn btn-warning d-block">draft</a>
+                    <a href="http://blogoc/?page=post&action=update&id=<?= $postId ?>" class="btn btn-warning d-block">draft</a>
                 <?php } ?>
             </td>
             <td>
-                <a href="http://blogoc/?page=post&action=delete&id=<?= $post->getId() ?>" class="btn btn-danger d-block">
+                <a href="http://blogoc/?page=post&action=delete&id=<?= $postId ?>" class="btn btn-danger d-block">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </a>
             </td>
         </tr>
-    <?php } ?>
+        <?php } ?>
+    </tbody>
 </table>  

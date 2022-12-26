@@ -9,34 +9,39 @@
         <th>supprimer</th>
     </thead>
 
-    <?php foreach($users as $user){ ?>
+    <tbody>
+        <?php foreach($users as $user){ 
+            $userId = $user->getId();
+            $role = $user->getRole();
+        ?>
         <tr>
             <td>
-                <a href="http://blogoc/?page=user&action=show&id=<?= $user->getId(); ?>"
+                <a href="http://blogoc/?page=user&action=show&id=<?= $userId ?>"
                     class="link-info text-decoration-none">
-                    <?= $user->getId(); ?>
+                    <?= $userId ?>
                 </a>
             </td>
             <td class="text-<?php
-                    if($user->getRole() === 'admin'){ echo 'success';}
+                    if($role === 'admin'){ echo 'success';}
                     else{ echo 'primary';}
                 ?>">
-                <?= ucfirst($user->getRole()) ?>           
+                <?= ucfirst($role) ?>           
             </td>
             <td><?= $user->getPseudo(); ?></td>
             <td><?= $user->getMail(); ?></td>
             <td>
-                <?php if($user->getRole() === 'user'){ ?>
-                    <a href="http://blogoc/?page=user&action=update&id=<?= $user->getId() ?>" class="btn btn-success d-block">admin</a>
+                <?php if($role === 'user'){ ?>
+                    <a href="http://blogoc/?page=user&action=update&id=<?= $userId ?>" class="btn btn-success d-block">admin</a>
                 <?php }else{ ?>
-                    <a href="http://blogoc/?page=user&action=update&id=<?= $user->getId() ?>" class="btn btn-primary d-block">user</a>
+                    <a href="http://blogoc/?page=user&action=update&id=<?= $userId ?>" class="btn btn-primary d-block">user</a>
                 <?php } ?>
             </td>
             <td>
-                <a href="http://blogoc/?page=user&action=delete&id=<?= $user->getId() ?>" class="btn btn-danger d-block">
+                <a href="http://blogoc/?page=user&action=delete&id=<?= $userId ?>" class="btn btn-danger d-block">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </a>
             </td>
         </tr>
-    <?php } ?>
+        <?php } ?>
+    </tbody>
 </table>

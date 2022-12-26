@@ -12,64 +12,71 @@
         <th>supprimer</th>
     </thead>
 
-    <?php foreach($comments as $comment){ ?>
+    <tbody>
+        <?php foreach($comments as $comment){ 
+            $commentId = $comment->getId();
+            $commentStatus = $comment->getStatus();
+            $postId = $comment->getPostId();
+            $authorId = $comment->getAuthorId();
+        ?>
         <tr>
             <td>
-                <a href="http://blogoc/?page=post&action=show&id=<?= $comment->getPostId(); ?>"
+                <a href="http://blogoc/?page=post&action=show&id=<?= $postId ?>"
                    class="link-info text-decoration-none">
-                    <?= $comment->getId(); ?>
+                    <?= $commentId ?>
                 </a>
             </td>
 
             <td class="text-<?php 
-                    if($comment->getStatus() === 'valid'){ echo 'success';}
-                    elseif($comment->getStatus() === 'invalid'){ echo 'danger';}
+                    if($commentStatus === 'valid'){ echo 'success';}
+                    elseif($commentStatus === 'invalid'){ echo 'danger';}
                     else{ echo 'light'; }
                 ?>">
-                <?= ucfirst($comment->getStatus()) ?>
+                <?= ucfirst($commentStatus) ?>
             </td>
             <td>
-                <a href="http://blogoc/?page=post&action=show&id=<?= $comment->getPostId(); ?>" 
+                <a href="http://blogoc/?page=post&action=show&id=<?= $postId ?>" 
                        class="link-primary text-decoration-none">
-                        <?= $comment->getPostId(); ?>
+                        <?= $postId ?>
                 </a> 
             </td>
             <td>
-                <a href="http://blogoc/?page=user&action=show&id=<?= $comment->getAuthorId(); ?>" 
+                <a href="http://blogoc/?page=user&action=show&id=<?= $authorId ?>" 
                        class="link-primary text-decoration-none">
-                        <?= $comment->getAuthorId(); ?>
+                        <?= $authorId ?>
                 </a> 
             </td>
-            <td><?= $comment->getContent(); ?></td>
-            <td><?= $comment->getCreatedAt(); ?></td>
+            <td><?= $comment->getContent() ?></td>
+            <td><?= $comment->getCreatedAt() ?></td>
             <td>
-                <?php if ($comment->getStatus() === 'waiting'){ ?>
-                    <a href="http://blogoc/?page=comment&action=update&id=<?= $comment->getId() ?>&status=valid" 
+                <?php if ($commentStatus === 'waiting'){ ?>
+                    <a href="http://blogoc/?page=comment&action=update&id=<?= $commentId ?>&status=valid" 
                        class="btn btn-success d-block">
                         valid
                     </a>
-                    <a href="http://blogoc/?page=comment&action=update&id=<?= $comment->getId() ?>&status=invalid" 
+                    <a href="http://blogoc/?page=comment&action=update&id=<?= $commentId ?>&status=invalid" 
                        class="btn btn-warning d-block mt-1">
                         invalid
                     </a>
-                <?php }else if ($comment->getStatus() === 'valid'){ ?>
-                    <a href="http://blogoc/?page=comment&action=update&id=<?= $comment->getId() ?>&status=invalid" 
+                <?php }else if ($commentStatus === 'valid'){ ?>
+                    <a href="http://blogoc/?page=comment&action=update&id=<?= $commentId ?>&status=invalid" 
                        class="btn btn-warning d-block">
                         invalid
                     </a>
                 <?php }else{ ?>
-                    <a href="http://blogoc/?page=comment&action=update&id=<?= $comment->getId() ?>&status=valid" 
+                    <a href="http://blogoc/?page=comment&action=update&id=<?= $commentId ?>&status=valid" 
                        class="btn btn-success d-block">
                         valid
                     </a>
                 <?php } ?>
             </td>
             <td>
-                <a href="http://blogoc/?page=comment&action=delete&id=<?= $comment->getId() ?>" 
+                <a href="http://blogoc/?page=comment&action=delete&id=<?= $commentId ?>" 
                    class="btn btn-danger d-block">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </a>
             </td>
         </tr>
-    <?php } ?>
+        <?php } ?>
+    </tbody>
 </table>
