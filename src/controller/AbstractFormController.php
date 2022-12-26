@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\UserEntity;
 use App\Service\ValidatorService;
+use App\Controller\AbstractController;
 
 
 abstract class AbstractFormController extends AbstractController
@@ -45,7 +46,7 @@ abstract class AbstractFormController extends AbstractController
     protected function verifyDataFormat(ValidatorService $validator, string $inputName, string $regex): ?string
     {
         if(!$validator->checkValidity($_POST[$inputName], $regex)){
-            return "Your pseudo doesn't respect the format";
+            return "Your $inputName doesn't respect the format";
         }
 
         return null;

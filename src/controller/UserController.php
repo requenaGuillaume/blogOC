@@ -5,8 +5,9 @@ namespace App\Controller;
 use App\Entity\UserEntity;
 use App\Repository\UserRepository;
 use App\Service\NormalizerService;
+use App\Controller\AdminController;
 
-class UserController extends AbstractController
+class UserController extends AdminController
 {
 
     public function run()
@@ -58,30 +59,17 @@ class UserController extends AbstractController
 
     public function delete()
     {
-        if(isset($_GET['id']) && !empty($_GET['id'])){
-            $id = intval($_GET['id']);
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
+        }
 
-            if(!$id){
-                return $this->render('404Template');
-            }
-        }else{
+        $id = $this->getIdFromUrl();
+
+        if(!$id){
             return $this->render('404Template');
         }
 
-        $userRepository = new UserRepository();
-        $userArray = $userRepository->find($id);
-
-        // if admin or current user....
-
-        if(!$userArray){
-            $this->addFlash('danger', 'This user does not exist');
-            $this->redirect('http://blogoc/?page=user&action=admin');
-        }
-
-        $userRepository->delete($id);
-
-        $this->addFlash('success', "The user n°{$userArray['id']} has been deleted");
-        $this->redirect('http://blogoc/?page=user&action=admin');
+        $this->deleteEntity($id, UserRepository::class);
     }
 
 

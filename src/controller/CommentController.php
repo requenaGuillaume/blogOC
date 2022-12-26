@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Entity\CommentEntity;
 use App\Service\NormalizerService;
+use App\Controller\AdminController;
 use App\Repository\CommentRepository;
-use App\Controller\AbstractController;
 
-class CommentController extends AbstractController
+class CommentController extends AdminController
 {
 
     public function run()
@@ -40,30 +40,17 @@ class CommentController extends AbstractController
 
     public function delete()
     {
-        if(isset($_GET['id']) && !empty($_GET['id'])){
-            $id = intval($_GET['id']);
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
+        }
 
-            if(!$id){
-                return $this->render('404Template');
-            }
-        }else{
+        $id = $this->getIdFromUrl();
+
+        if(!$id){
             return $this->render('404Template');
         }
 
-        $commentRepository = new CommentRepository();
-        $commentArray = $commentRepository->find($id);
-
-        // if admin or current user....
-
-        if(!$commentArray){
-            $this->addFlash('danger', 'This comment does not exist');
-            $this->redirect('http://blogoc/?page=comment&action=admin');
-        }
-
-        $commentRepository->delete($id);
-
-        $this->addFlash('success', "The comment n°{$commentArray['id']} has been deleted");
-        $this->redirect('http://blogoc/?page=comment&action=admin');
+        $this->deleteEntity($id, CommentRepository::class);
     }
 
 

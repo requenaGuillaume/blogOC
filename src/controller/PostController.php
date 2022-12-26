@@ -8,9 +8,10 @@ use App\Entity\CommentEntity;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Service\NormalizerService;
+use App\Controller\AdminController;
 use App\Repository\CommentRepository;
 
-class PostController extends AbstractController
+class PostController extends AdminController
 {
 
     public function run()
@@ -109,30 +110,17 @@ class PostController extends AbstractController
 
     public function delete()
     {
-        if(isset($_GET['id']) && !empty($_GET['id'])){
-            $id = intval($_GET['id']);
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
+        }
 
-            if(!$id){
-                return $this->render('404Template');
-            }
-        }else{
+        $id = $this->getIdFromUrl();
+
+        if(!$id){
             return $this->render('404Template');
         }
 
-        $postRepository = new PostRepository();
-        $postArray = $postRepository->find($id);
-
-        // if admin or current user....
-
-        if(!$postArray){
-            $this->addFlash('danger', 'This post does not exist');
-            $this->redirect('http://blogoc/?page=post&action=admin');
-        }
-
-        $postRepository->delete($id);
-
-        $this->addFlash('success', "The post n°{$postArray['id']} has been deleted");
-        $this->redirect('http://blogoc/?page=post&action=admin');
+        $this->deleteEntity($id, PostRepository::class);
     }
 
 
