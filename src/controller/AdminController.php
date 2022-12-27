@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Service\NormalizerService;
 
 
-class AdminController extends AbstractController
+class AdminController extends AbstractFormController
 {
 
     public function run()

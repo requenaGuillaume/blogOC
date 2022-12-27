@@ -5,14 +5,19 @@ namespace App\Controller;
 use App\Entity\PostEntity;
 use App\Entity\UserEntity;
 use App\Entity\CommentEntity;
+use App\Service\ValidatorService;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Service\NormalizerService;
 use App\Controller\AdminController;
 use App\Repository\CommentRepository;
+use DateTime;
 
 class PostController extends AdminController
 {
+
+    private const VALID_REGISTER_FIELDS_NAME = ['title', 'status', 'content'];
+
 
     public function run()
     {
@@ -35,7 +40,7 @@ class PostController extends AdminController
         if(!$this->getUser() || !$this->currentUserIsAdmin()){
             $this->redirect('http://blogoc/?page=homepage');
         }
-        
+
         $posts = $this->getAll(PostRepository::class);
         return $this->render('AllPostsAdminTemplate', ['posts' => $posts]);
     }
@@ -95,7 +100,53 @@ class PostController extends AdminController
 
     public function create()
     {
-        // code
+        if($_POST){
+
+            $validator = new ValidatorService();
+            $formContainsError = $this->formHasError($validator);
+
+            if($formContainsError){
+                return $this->render('CreatePostTemplate');
+            }
+
+            if(!in_array($_POST['status'], [PostEntity::STATUS_DRAFT, PostEntity::STATUS_ONLINE])){
+                $this->addFlash('danger', 'Status is not valid');
+                $this->redirect('http://blogoc/?page=post&action=create');
+            }
+            
+            $title = htmlspecialchars($_POST['title']);            
+            $slug = preg_replace('/\s+/', '-', strtolower($title));
+
+            $postRepository = new PostRepository();
+            $slugAlreadyExist = $postRepository->findOneBy(['slug' => $slug]);
+
+            if($slugAlreadyExist){
+                $this->addFlash('danger', 'Slug already taken, use another title to avoid that');
+                $this->redirect('http://blogoc/?page=post&action=create');
+            }
+
+            $now = new DateTime();
+            $content = htmlspecialchars($_POST['content']);
+
+            $postEntity = new PostEntity();
+            $postEntity->setAuthorId($this->getUser()->getId())
+                       ->setTitle($title)
+                       ->setStatus(htmlspecialchars($_POST['status']))
+                       ->setContent($content)
+                       ->setHead(substr($content, 0, 100))
+                       ->setSlug($slug)
+                       ->setLastUpdate($now->format('Y-m-d H:i:s'));
+
+            $normalizer = new NormalizerService();
+            $post = $normalizer->denormalize($postEntity);
+            
+            $postRepository->create($post);
+
+            $this->addFlash('success', "The post {$postEntity->getTitle()} has been successfully created !");
+            $this->redirect("http://blogoc/?page=post&action=list");
+        }
+
+        return $this->render('CreatePostTemplate');
     }
 
 
@@ -154,5 +205,75 @@ class PostController extends AdminController
 
         $this->addFlash('success', "The post n°$id has been updated");
         $this->redirect('http://blogoc/?page=post&action=list');
+    }
+
+
+    // ====================== PRIVATE FUNCTIONS ====================== \\
+
+    private function formHasError(ValidatorService $validator): bool
+    {
+        $error = $this->verifyInputCount(count($_POST), 3);
+        if($error){
+            $this->addFlash('danger', $error);
+            return true;
+        }
+
+        $error = $this->verifyInputsValidity($_POST, self::VALID_REGISTER_FIELDS_NAME);
+        if($error){
+            $this->addFlash('danger', $error); 
+            return true;                 
+        }
+
+        if($this->inputsHasDataLengthError($validator)){
+            return true;
+        }
+
+        if($this->dataHasFormatError($validator)){
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private function inputsHasDataLengthError(ValidatorService $validator): bool
+    {
+        $error = $this->verifyDataLenght($validator, 'title', 2, 40);
+        if($error){
+            $this->addFlash('danger', $error);  
+            return true;                
+        }
+
+        $error = $this->verifyDataLenght($validator, 'status', strlen(PostEntity::STATUS_DRAFT), strlen(PostEntity::STATUS_ONLINE));
+        if($error){
+            $this->addFlash('danger', $error);  
+            return true;                
+        }
+
+        $error = $this->verifyDataLenght($validator, 'content', 5, 1000);
+        if($error){
+            $this->addFlash('danger', $error);   
+            return true;               
+        }
+
+        return false;
+    }
+
+
+    private function dataHasFormatError(ValidatorService $validator): bool
+    {
+        $error = $this->verifyDataFormat($validator, 'title', PostEntity::REGEX_TEXT);
+        if($error){
+            $this->addFlash('danger', $error);  
+            return true;                
+        }
+
+        $error = $this->verifyDataFormat($validator, 'content', PostEntity::REGEX_TEXT);
+        if($error){
+            $this->addFlash('danger', $error);  
+            return true;                
+        }
+
+        return false;
     }
 }

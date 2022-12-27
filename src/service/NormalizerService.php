@@ -33,6 +33,13 @@ class NormalizerService
 
         foreach($properties as $property){
             $getProperty = 'get'.ucfirst($property);
+
+            if(preg_match('/[A-Z]/', $property)){
+                $upperCaseLetterPosition = strcspn($property, 'ABCDEFGHJIJKLMNOPQRSTUVWXYZ');
+                $letterTolowercase = strtolower($property[$upperCaseLetterPosition]);
+                $property = str_replace($property[$upperCaseLetterPosition], "_$letterTolowercase", $property);
+            }
+
             $array[$property] = $entity->$getProperty();
         }
 

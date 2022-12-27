@@ -16,6 +16,7 @@ final class PostEntity extends AbstractEntity
 
     public const STATUS_DRAFT = 'draft';
     public const STATUS_ONLINE = 'online';
+    public const REGEX_TEXT = '/^[A-Za-z0-9]+[A-Za-z0-9,;:€$£)(°&|\'-_\s]{0,}[A-Za-z0-9!?.]+$/';
 
 
     public function listProperties(): array
