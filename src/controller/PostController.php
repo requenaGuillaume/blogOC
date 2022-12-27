@@ -30,6 +30,17 @@ class PostController extends AdminController
     }
 
 
+    public function list()
+    {
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
+        }
+        
+        $posts = $this->getAll(PostRepository::class);
+        return $this->render('AllPostsAdminTemplate', ['posts' => $posts]);
+    }
+
+
     public function show()
     {
         $id = $this->getIdFromUrl();
@@ -82,13 +93,6 @@ class PostController extends AdminController
     }
 
 
-    public function list()
-    {
-        $posts = $this->getAll(PostRepository::class);
-        return $this->render('AllPostsAdminTemplate', ['posts' => $posts]);
-    }
-
-
     public function create()
     {
         // code
@@ -107,7 +111,10 @@ class PostController extends AdminController
             return $this->render('404Template');
         }
 
-        $this->deleteEntity($id, PostRepository::class);
+        $deletedEntityInfos = $this->deleteEntity($id, PostRepository::class);
+
+        $this->addFlash('success', "The post n°{$deletedEntityInfos['id']} has been deleted");
+        $this->redirect("http://blogoc/?page=post&action=list");
     }
 
 
@@ -126,18 +133,16 @@ class PostController extends AdminController
         $postRepository = new PostRepository();
         $postArray = $postRepository->find($id);
 
-        // if admin or current user....
-
         if(!$postArray){
             $this->addFlash('danger', 'This post does not exist');
             $this->redirect('http://blogoc/?page=post&action=list');
         }
 
         $normalizer = new NormalizerService();
-        $newInfos = [];
         $post = $normalizer->normalize($postArray, PostEntity::class);
-
         $currentStatus = $post->getStatus();
+        
+        $newInfos = [];
 
         if($currentStatus === PostEntity::STATUS_DRAFT){
             $newInfos = ['status' => PostEntity::STATUS_ONLINE];

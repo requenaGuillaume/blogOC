@@ -62,7 +62,10 @@ class UserController extends AdminController
             return $this->render('404Template');
         }
 
-        $this->deleteEntity($id, UserRepository::class);
+        $deletedEntityInfos = $this->deleteEntity($id, UserRepository::class);
+
+        $this->addFlash('success', "The user n°{$deletedEntityInfos['id']} has been deleted");
+        $this->redirect("http://blogoc/?page=user&action=list");
     }
 
 
@@ -87,10 +90,10 @@ class UserController extends AdminController
         }
 
         $normalizer = new NormalizerService();
-        $newInfos = [];
         $user = $normalizer->normalize($userArray, UserEntity::class);
-
         $currentUserRole = $user->getRole();
+        
+        $newInfos = [];
 
         if($currentUserRole === UserEntity::ROLE_USER){
             $newInfos = ['role' => UserEntity::ROLE_ADMIN];

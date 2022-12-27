@@ -14,7 +14,7 @@ class AdminController extends AbstractController
     }
 
 
-    protected function deleteEntity(int $id, string $repositoryClass)
+    protected function deleteEntity(int $id, string $repositoryClass): array
     {
         $repositoryName = $this->getRepositoryName($repositoryClass);
         $entity = strtolower(str_replace('Repository', '', $repositoryName));
@@ -29,8 +29,7 @@ class AdminController extends AbstractController
 
         $repository->delete($id);
 
-        $this->addFlash('success', "The $entity n°{$entityInArray['id']} has been deleted");
-        $this->redirect("http://blogoc/?page=$entity&action=list");
+        return $entityInArray;
     }
 
 

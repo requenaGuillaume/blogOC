@@ -18,6 +18,10 @@ class CommentController extends AdminController
 
     public function list()
     {
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
+        }
+        
         $comments = $this->getAll(CommentRepository::class);
         return $this->render('AllCommentsAdminTemplate', ['comments' => $comments]);
     }
@@ -41,7 +45,10 @@ class CommentController extends AdminController
             return $this->render('404Template');
         }
 
-        $this->deleteEntity($id, CommentRepository::class);
+        $deletedEntityInfos = $this->deleteEntity($id, CommentRepository::class);
+
+        $this->addFlash('success', "The comment n°{$deletedEntityInfos['id']} has been deleted");
+        $this->redirect("http://blogoc/?page=comment&action=list");
     }
 
 
@@ -66,11 +73,11 @@ class CommentController extends AdminController
         }
 
         $normalizer = new NormalizerService();
-        $newInfos = [];
         $comment = $normalizer->normalize($commentArray, CommentEntity::class);
-
+        
         $nextStatus = $_GET['status'];
-
+        $newInfos = [];
+        
         if($nextStatus === CommentEntity::STATUS_VALID){
             $newInfos = ['status' => CommentEntity::STATUS_VALID];
         }
