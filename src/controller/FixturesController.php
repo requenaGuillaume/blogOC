@@ -13,7 +13,7 @@ use App\Repository\CommentRepository;
 use App\Database\PDOConnection;
 use App\Service\NormalizerService;
 
-class FixturesController
+class FixturesController extends AbstractController
 {
     protected ?PDO $pdo = null;
 
@@ -52,7 +52,9 @@ class FixturesController
 
     public function run(): void
     {
-        // TODO : This route must be accessible only by admin, else redirect
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
+        }
 
         echo 'Beginning of the Fixtures<br><br>';
 
@@ -79,6 +81,9 @@ class FixturesController
      */
     // public function delete()
     // {
+        // if(!$this->getUser() || !$this->currentUserIsAdmin()){
+        //     $this->redirect('http://blogoc/?page=homepage');
+        // }
     //     echo 'Starting to drop data<br><br>';
 
     //     $this->emptyTable('comment');

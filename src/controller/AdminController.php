@@ -8,13 +8,15 @@ use App\Service\NormalizerService;
 class AdminController extends AbstractFormController
 {
 
+    // TODO : abstract function to force child implementation
+
     public function run()
     {
         return $this->render('AdminTemplate');
     }
 
 
-    protected function deleteEntity(int $id, string $repositoryClass): array
+    protected function deleteEntity(int $id, string $repositoryClass): void
     {
         $repositoryName = $this->getRepositoryName($repositoryClass);
         $entity = strtolower(str_replace('Repository', '', $repositoryName));
@@ -28,8 +30,6 @@ class AdminController extends AbstractFormController
         }
 
         $repository->delete($id);
-
-        return $entityInArray;
     }
 
 

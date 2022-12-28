@@ -16,7 +16,7 @@ use DateTime;
 class PostController extends AdminController
 {
 
-    private const VALID_REGISTER_FIELDS_NAME = ['title', 'status', 'content'];
+    private const VALID_POST_FIELDS_NAME = ['title', 'status', 'content'];
 
 
     public function run()
@@ -93,7 +93,9 @@ class PostController extends AdminController
         return $this->render('ShowOnePostTemplate', [
             'post' => $post,
             'author' => $author,
-            'comments' => $comments
+            'comments' => $comments,
+            'user' => $this->getUser(),
+            'validStatus' => CommentEntity::STATUS_VALID
         ]);     
     }
 
@@ -162,9 +164,9 @@ class PostController extends AdminController
             return $this->render('404Template');
         }
 
-        $deletedEntityInfos = $this->deleteEntity($id, PostRepository::class);
+        $this->deleteEntity($id, PostRepository::class);
 
-        $this->addFlash('success', "The post n°{$deletedEntityInfos['id']} has been deleted");
+        $this->addFlash('success', "The post has been deleted");
         $this->redirect("http://blogoc/?page=post&action=list");
     }
 
@@ -218,7 +220,7 @@ class PostController extends AdminController
             return true;
         }
 
-        $error = $this->verifyInputsValidity($_POST, self::VALID_REGISTER_FIELDS_NAME);
+        $error = $this->verifyInputsValidity($_POST, self::VALID_POST_FIELDS_NAME);
         if($error){
             $this->addFlash('danger', $error); 
             return true;                 

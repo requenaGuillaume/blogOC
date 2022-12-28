@@ -62,9 +62,9 @@ class UserController extends AdminController
             return $this->render('404Template');
         }
 
-        $deletedEntityInfos = $this->deleteEntity($id, UserRepository::class);
+        $this->deleteEntity($id, UserRepository::class);
 
-        $this->addFlash('success', "The user n°{$deletedEntityInfos['id']} has been deleted");
+        $this->addFlash('success', "The user has been deleted");
         $this->redirect("http://blogoc/?page=user&action=list");
     }
 
