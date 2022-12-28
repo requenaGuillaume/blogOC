@@ -12,6 +12,10 @@ class AdminController extends AbstractFormController
 
     public function run()
     {
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
+        }
+        
         return $this->render('AdminTemplate');
     }
 

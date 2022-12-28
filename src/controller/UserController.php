@@ -12,7 +12,14 @@ class UserController extends AdminController
 
     public function run()
     {
-        $this->render('404Template');
+        $user = $this->getUser();
+
+        if(!$user){
+            $this->addFlash('warning', 'You must be logged in to access your user profil page');
+            $this->redirect('http://blogoc/?page=login');
+        }
+
+        return $this->render('UserProfilTemplate', ['user' => $user]);
     }
 
 
@@ -29,6 +36,10 @@ class UserController extends AdminController
 
     public function show()
     {
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
+        }
+
         $id = $this->getIdFromUrl();
 
         if(!$id){
