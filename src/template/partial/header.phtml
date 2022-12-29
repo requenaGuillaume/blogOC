@@ -7,7 +7,10 @@
                     <li class="nav-item">
                         <a class="nav-link text-light" href="http://blogoc/?page=post">Posts</a>
                     </li>
-                    <?php if($this->getUser() && $this->getUser()->getRole() === 'admin'){ ?>
+                    <?php if($this->getUser() && $this->getUser()->getRole() === 'admin'){ ?>                        
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="http://blogoc/?page=post&action=create">New post</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" href="http://blogoc/?page=admin">Admin</a>
                         </li>
@@ -18,14 +21,14 @@
                             <a class="nav-link text-light" href="http://blogoc/?page=user">Profil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-danger text-light" href="http://blogoc/?page=logout">Logout</a>
+                            <a class="nav-link btn btn-danger text-light ms-2" href="http://blogoc/?page=logout">Logout</a>
                         </li>
                     <?php }else{ ?>
                         <li class="nav-item">
                             <a class="nav-link btn btn-success text-light ms-2" href="http://blogoc/?page=login">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-primary text-light ms-2" href="http://blogoc/?page=register">Register</a>
+                            <a class="nav-link btn btn-primary text-light ms-2" href="http://blogoc/?page=user&action=create">Register</a>
                         </li>
                     <?php } ?>
                 </ul>

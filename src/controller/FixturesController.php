@@ -13,7 +13,7 @@ use App\Repository\CommentRepository;
 use App\Database\PDOConnection;
 use App\Service\NormalizerService;
 
-class FixturesController extends AbstractController
+final class FixturesController extends AbstractController
 {
     protected ?PDO $pdo = null;
 

@@ -2,18 +2,22 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\PostEntity;
 use App\Entity\UserEntity;
 use App\Entity\CommentEntity;
+use App\Interface\FormInterface;
+use App\Interface\AdminInterface;
 use App\Service\ValidatorService;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Service\NormalizerService;
 use App\Controller\AdminController;
+use App\Interface\ValidatorInterface;
 use App\Repository\CommentRepository;
-use DateTime;
 
-class PostController extends AdminController
+
+final class PostController extends AdminController implements AdminInterface, FormInterface
 {
 
     private const VALID_POST_FIELDS_NAME = ['title', 'status', 'content'];
@@ -34,6 +38,8 @@ class PostController extends AdminController
         return $this->render('ShowAllPostsTemplate', ['posts' => $posts]);
     }
 
+
+    // =============== AdminInterface functions =============== \\
 
     public function list()
     {
@@ -210,9 +216,9 @@ class PostController extends AdminController
     }
 
 
-    // ====================== PRIVATE FUNCTIONS ====================== \\
+    // =============== FormInterface functions =============== \\
 
-    private function formHasError(ValidatorService $validator): bool
+    public function formHasError(ValidatorInterface $validator): bool
     {
         $error = $this->verifyInputCount(count($_POST), 3);
         if($error){
@@ -238,7 +244,7 @@ class PostController extends AdminController
     }
 
 
-    private function inputsHasDataLengthError(ValidatorService $validator): bool
+    public function inputsHasDataLengthError(ValidatorInterface $validator): bool
     {
         $error = $this->verifyDataLenght($validator, 'title', 2, 40);
         if($error){
@@ -246,6 +252,11 @@ class PostController extends AdminController
             return true;                
         }
 
+        // Error on create post if status = online (data length error)
+        // var_dump(strlen(PostEntity::STATUS_DRAFT));
+        // var_dump(strlen(PostEntity::STATUS_ONLINE));
+        // var_dump(strlen($_POST['status']));
+        // die();
         $error = $this->verifyDataLenght($validator, 'status', strlen(PostEntity::STATUS_DRAFT), strlen(PostEntity::STATUS_ONLINE));
         if($error){
             $this->addFlash('danger', $error);  
@@ -262,7 +273,7 @@ class PostController extends AdminController
     }
 
 
-    private function dataHasFormatError(ValidatorService $validator): bool
+    public function dataHasFormatError(ValidatorInterface $validator): bool
     {
         $error = $this->verifyDataFormat($validator, 'title', PostEntity::REGEX_TEXT);
         if($error){

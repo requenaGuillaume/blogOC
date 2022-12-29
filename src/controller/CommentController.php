@@ -4,13 +4,16 @@ namespace App\Controller;
 
 use App\Entity\PostEntity;
 use App\Entity\CommentEntity;
+use App\Interface\FormInterface;
+use App\Interface\AdminInterface;
 use App\Service\ValidatorService;
 use App\Service\NormalizerService;
 use App\Controller\AdminController;
+use App\Interface\ValidatorInterface;
 use App\Repository\CommentRepository;
-use DateTime;
 
-class CommentController extends AdminController
+
+final class CommentController extends AdminController implements AdminInterface, FormInterface
 {
 
     private const VALID_COMMENT_FIELDS_NAME = ['content'];
@@ -22,6 +25,8 @@ class CommentController extends AdminController
     }
 
 
+    // =============== AdminInterface functions =============== \\
+
     public function list()
     {
         if(!$this->getUser() || !$this->currentUserIsAdmin()){
@@ -30,6 +35,27 @@ class CommentController extends AdminController
         
         $comments = $this->getAll(CommentRepository::class);
         return $this->render('AllCommentsAdminTemplate', ['comments' => $comments]);
+    }
+
+
+    /** Actually there is no link leading to this route in our website */
+    public function show()
+    {
+        $id = $this->getIdFromUrl();
+
+        if(!$id){
+            return $this->render('404Template');
+        }
+
+        $commentRepository = new CommentRepository();
+        $commentArray = $commentRepository->find($id);
+
+        if(!$commentArray){
+            $this->addFlash('danger', 'This comment doesn\'t exist');
+            $this->redirect('http://blogoc/?page=post');
+        }
+
+        $this->redirect("http://blogoc/?page=post&action=show&id={$commentArray['id']}");
     }
 
 
@@ -126,9 +152,9 @@ class CommentController extends AdminController
     }
 
 
-    // ====================== PRIVATE FUNCTIONS ====================== \\
+    // =============== FormInterface functions =============== \\
 
-    private function formHasError(ValidatorService $validator): bool
+    public function formHasError(ValidatorInterface $validator): bool
     {
         $error = $this->verifyInputCount(count($_POST), 1);
         if($error){
@@ -154,7 +180,7 @@ class CommentController extends AdminController
     }
 
 
-    private function inputsHasDataLengthError(ValidatorService $validator): bool
+    public function inputsHasDataLengthError(ValidatorInterface $validator): bool
     {
         $error = $this->verifyDataLenght($validator, 'content', 3, 1000);
         if($error){
@@ -166,7 +192,7 @@ class CommentController extends AdminController
     }
 
 
-    private function dataHasFormatError(ValidatorService $validator): bool
+    public function dataHasFormatError(ValidatorInterface $validator): bool
     {
         $error = $this->verifyDataFormat($validator, 'content', PostEntity::REGEX_TEXT);
         if($error){

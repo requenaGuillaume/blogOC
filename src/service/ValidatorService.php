@@ -2,7 +2,10 @@
 
 namespace App\Service;
 
-class ValidatorService
+use App\Interface\ValidatorInterface;
+
+
+class ValidatorService implements ValidatorInterface
 {
 
     public function checkValidity(string $data, string $regex): bool

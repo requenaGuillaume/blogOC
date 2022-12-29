@@ -2,8 +2,10 @@
 
 namespace App\Service;
 
+use App\Interface\NormalizerInterface;
 
-class NormalizerService
+
+class NormalizerService implements NormalizerInterface
 {
 
     public function normalize(array $array, string $entityClass): object

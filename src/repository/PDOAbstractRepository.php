@@ -2,8 +2,9 @@
 
 namespace App\Repository;
 
-use App\Database\PDOConnection;
 use PDO;
+use App\Database\PDOConnection;
+use App\Interface\RepositoryInterface;
 
 abstract class PDOAbstractRepository implements RepositoryInterface
 {    

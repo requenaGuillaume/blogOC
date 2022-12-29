@@ -8,8 +8,6 @@ use App\Service\NormalizerService;
 class AdminController extends AbstractFormController
 {
 
-    // TODO : abstract function to force child implementation
-
     public function run()
     {
         if(!$this->getUser() || !$this->currentUserIsAdmin()){
@@ -19,6 +17,8 @@ class AdminController extends AbstractFormController
         return $this->render('AdminTemplate');
     }
 
+
+    // ============== PROTECTED & PRIVATE FUNCTIONS =========== \\
 
     protected function deleteEntity(int $id, string $repositoryClass): void
     {
