@@ -21,7 +21,7 @@ class ValidatorService implements ValidatorInterface
     {
         $dataLength = strlen($data);
 
-        if($dataLength >= $minLength && $dataLength < $maxLength){
+        if($dataLength >= $minLength && $dataLength <= $maxLength){
             return true;
         }
 

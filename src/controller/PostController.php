@@ -252,11 +252,6 @@ final class PostController extends AdminController implements AdminInterface, Fo
             return true;                
         }
 
-        // Error on create post if status = online (data length error)
-        // var_dump(strlen(PostEntity::STATUS_DRAFT));
-        // var_dump(strlen(PostEntity::STATUS_ONLINE));
-        // var_dump(strlen($_POST['status']));
-        // die();
         $error = $this->verifyDataLenght($validator, 'status', strlen(PostEntity::STATUS_DRAFT), strlen(PostEntity::STATUS_ONLINE));
         if($error){
             $this->addFlash('danger', $error);  
