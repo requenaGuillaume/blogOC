@@ -102,7 +102,9 @@ abstract class PDOAbstractRepository implements RepositoryInterface
 
     public function findBy(array $data, ?array $orderCriterias = null, ?int $limit = null, ?int $offset = null): array
     {
-        extract($this->getSql($data));
+        $findAll = $data ? false : true;
+
+        extract($this->getSql($data, $findAll));
 
         if($orderCriterias){
             $sql = $this->addCriteriaToSql($orderCriterias, $sql); 
@@ -251,10 +253,10 @@ abstract class PDOAbstractRepository implements RepositoryInterface
     }
 
 
-    private function getSql(array $data): array
+    private function getSql(array $data, bool $findAll = false): array
     {
         $iteration = 1;
-        $sql = 'WHERE ';
+        $sql = $findAll ? '' : 'WHERE ';
         $params = [];
 
         $allColumns = array_merge($this->requiredColumns, $this->optionnalColumns);

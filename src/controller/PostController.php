@@ -28,7 +28,8 @@ final class PostController extends AdminController implements AdminInterface, Fo
         $normalizer = new NormalizerService();
         $postRepository = new PostRepository();
 
-        $postsArray =  $postRepository->findAll();
+        // TODO : sort by creation date (so create the created_at field in database)
+        $postsArray =  $postRepository->findBy([], ['last_update' => 'DESC']);
         $posts = [];
 
         foreach($postsArray as $postInArray){
@@ -112,7 +113,7 @@ final class PostController extends AdminController implements AdminInterface, Fo
 
             $validator = new ValidatorService();
             $formContainsError = $this->formHasError($validator);
-
+// TODO : handle Head input (add head input)
             if($formContainsError){
                 return $this->render('CreatePostTemplate');
             }
