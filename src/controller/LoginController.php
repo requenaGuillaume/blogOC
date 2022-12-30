@@ -20,7 +20,6 @@ final class LoginController extends AbstractFormController implements FormInterf
     {
         if($_POST){
 
-            // TODO => add a ValidatorInterface ? and in method's signature type ValidatorInterface ???
             $validator = new ValidatorService();
             $formContainsError = $this->formHasError($validator);
 
@@ -38,7 +37,6 @@ final class LoginController extends AbstractFormController implements FormInterf
             }
 
             $normalizer = new NormalizerService();
-
             $userEntity = $normalizer->normalize($user, UserEntity::class);
 
             if(password_verify($_POST['pass'], $userEntity->getPassword())){
