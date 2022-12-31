@@ -5,6 +5,7 @@
 <div>
     <h1><?= $postTitle ?></h1>
     <p>Crée par <?= $author->getPseudo() ?> (last update : <?= $post->getLastUpdate() ?>)</p>
+    <p><?= $post->getHead() ?></p>
     <p><?= $post->getContent() ?></p>
 </div>
 
