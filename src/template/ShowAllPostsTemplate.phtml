@@ -5,7 +5,7 @@
             <img src="#" class="card-img-top" alt="">
             <div class="card-body">
                 <h5 class="card-title"><?= $post->getTitle() ?></h5>
-                <p>Last update : <?= $post->getLastUpdate() ?> </p>
+                <p>Created : <?= $post->getCreatedAt() ?> </p>
                 <p class="card-text"><?= $post->getHead() ?></p>
                 <a href="http://blogoc/?page=post&action=show&id=<?= $post->getId() ?>" class="btn btn-primary">
                     Liens vers l'article

@@ -10,6 +10,7 @@ final class PostEntity extends AbstractEntity
     private int $authorId;
     private string $head;
     private string $lastUpdate;
+    private string $createdAt;
     private string $status;
     private string $content;
     private string $slug;
@@ -89,6 +90,17 @@ final class PostEntity extends AbstractEntity
     public function getLastUpdate(): string
     {
         return $this->lastUpdate;
+    }
+
+    public function setCreatedAt(string $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
     }
 
     public function setStatus(string $status): self
