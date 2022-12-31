@@ -20,7 +20,7 @@ use App\Repository\CommentRepository;
 final class PostController extends AdminController implements AdminInterface, FormInterface
 {
 
-    private const VALID_POST_FIELDS_NAME = ['title', 'status', 'content'];
+    private const VALID_POST_FIELDS_NAME = ['title', 'status', 'head', 'content'];
 
 
     public function run()
@@ -28,7 +28,6 @@ final class PostController extends AdminController implements AdminInterface, Fo
         $normalizer = new NormalizerService();
         $postRepository = new PostRepository();
 
-        // TODO : sort by creation date (so create the created_at field in database)
         $postsArray =  $postRepository->findBy([], ['last_update' => 'DESC']);
         $posts = [];
 
@@ -113,7 +112,7 @@ final class PostController extends AdminController implements AdminInterface, Fo
 
             $validator = new ValidatorService();
             $formContainsError = $this->formHasError($validator);
-// TODO : handle Head input (add head input)
+
             if($formContainsError){
                 return $this->render('CreatePostTemplate');
             }
@@ -135,14 +134,13 @@ final class PostController extends AdminController implements AdminInterface, Fo
             }
 
             $now = new DateTime();
-            $content = htmlspecialchars($_POST['content']);
 
             $postEntity = new PostEntity();
             $postEntity->setAuthorId($this->getUser()->getId())
                        ->setTitle($title)
                        ->setStatus(htmlspecialchars($_POST['status']))
-                       ->setContent($content)
-                       ->setHead(substr($content, 0, 100))
+                       ->setContent(htmlspecialchars($_POST['content']))
+                       ->setHead(htmlspecialchars($_POST['head']))
                        ->setSlug($slug)
                        ->setLastUpdate($now->format('Y-m-d H:i:s'));
 
@@ -221,7 +219,7 @@ final class PostController extends AdminController implements AdminInterface, Fo
 
     public function formHasError(ValidatorInterface $validator): bool
     {
-        $error = $this->verifyInputCount(count($_POST), 3);
+        $error = $this->verifyInputCount(count($_POST), 4);
         if($error){
             $this->addFlash('danger', $error);
             return true;
@@ -259,6 +257,12 @@ final class PostController extends AdminController implements AdminInterface, Fo
             return true;                
         }
 
+        $error = $this->verifyDataLenght($validator, 'head', 5, 200);
+        if($error){
+            $this->addFlash('danger', $error);   
+            return true;               
+        }
+
         $error = $this->verifyDataLenght($validator, 'content', 5, 1000);
         if($error){
             $this->addFlash('danger', $error);   
@@ -272,6 +276,12 @@ final class PostController extends AdminController implements AdminInterface, Fo
     public function dataHasFormatError(ValidatorInterface $validator): bool
     {
         $error = $this->verifyDataFormat($validator, 'title', PostEntity::REGEX_TEXT);
+        if($error){
+            $this->addFlash('danger', $error);  
+            return true;                
+        }
+
+        $error = $this->verifyDataFormat($validator, 'head', PostEntity::REGEX_TEXT);
         if($error){
             $this->addFlash('danger', $error);  
             return true;                
