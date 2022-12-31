@@ -31,9 +31,9 @@
             <td><?= $user->getMail(); ?></td>
             <td>
                 <?php if($role === 'user'){ ?>
-                    <a href="http://blogoc/?page=user&action=update&id=<?= $userId ?>" class="btn btn-success d-block">admin</a>
+                    <a href="http://blogoc/?page=user&action=updateStatus&id=<?= $userId ?>" class="btn btn-success d-block">admin</a>
                 <?php }else{ ?>
-                    <a href="http://blogoc/?page=user&action=update&id=<?= $userId ?>" class="btn btn-primary d-block">user</a>
+                    <a href="http://blogoc/?page=user&action=updateStatus&id=<?= $userId ?>" class="btn btn-primary d-block">user</a>
                 <?php } ?>
             </td>
             <td>

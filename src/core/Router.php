@@ -22,6 +22,7 @@ final class Router
         'create' => 'create',
         'show' => 'show',
         'update' => 'update',
+        'updateStatus' => 'updateStatus',
         'delete' => 'delete',
         'list' => 'list'
     ];

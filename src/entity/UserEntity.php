@@ -75,4 +75,13 @@ final class UserEntity extends AbstractEntity
         return $this->password;
     }
 
+    public function isAdmin(): bool
+    {
+        if($this->role === self::ROLE_ADMIN){
+            return true;
+        }
+
+        return false;
+    }
+
 }

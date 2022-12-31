@@ -1,9 +1,20 @@
-<?php $postTitle = ucfirst($post->getTitle()); ?>
+<?php $postTitle = ucfirst($post->getTitle()); 
+
+if($user->isAdmin()){ ?>
+    <a href="http://blogoc/?page=post&action=delete&id=<?= $post->getId() ?>"
+       class="btn btn-danger mb-2">
+        Delete
+    </a>
+    <a href="http://blogoc/?page=post&action=update&id=<?= $post->getId() ?>"
+       class="btn btn-warning mb-2">
+        Update
+    </a>
+<?php } ?>
+
 
 <h1 class="text-center mt-3 mb-5"><?= $postTitle ?></h1>
 
 <div>
-    <h1><?= $postTitle ?></h1>
     <p>Crée par <?= $author->getPseudo() ?> (last update : <?= $post->getLastUpdate() ?>)</p>
     <p><?= $post->getHead() ?></p>
     <p><?= $post->getContent() ?></p>

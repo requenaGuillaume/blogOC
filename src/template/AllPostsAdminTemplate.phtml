@@ -45,9 +45,9 @@
             <td><?= $post->getSlug(); ?></td>
             <td>
                 <?php if($status === 'draft'){ ?>
-                    <a href="http://blogoc/?page=post&action=update&id=<?= $postId ?>" class="btn btn-info d-block">online</a>
+                    <a href="http://blogoc/?page=post&action=updateStatus&id=<?= $postId ?>" class="btn btn-info d-block">online</a>
                 <?php }else{ ?>
-                    <a href="http://blogoc/?page=post&action=update&id=<?= $postId ?>" class="btn btn-warning d-block">draft</a>
+                    <a href="http://blogoc/?page=post&action=updateStatus&id=<?= $postId ?>" class="btn btn-warning d-block">draft</a>
                 <?php } ?>
             </td>
             <td>

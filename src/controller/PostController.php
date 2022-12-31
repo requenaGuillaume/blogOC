@@ -178,6 +178,14 @@ final class PostController extends AdminController implements AdminInterface, Fo
 
     public function update()
     {
+        //
+    }
+
+
+    // =============== Other function =============== \\
+
+    public function updateStatus()
+    {
         if(!$this->getUser() || !$this->currentUserIsAdmin()){
             $this->redirect('http://blogoc/?page=homepage');
         }
