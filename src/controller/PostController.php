@@ -178,7 +178,78 @@ final class PostController extends AdminController implements AdminInterface, Fo
 
     public function update()
     {
-        //
+        if(!$this->getUser() || !$this->currentUserIsAdmin()){
+            $this->redirect('http://blogoc/?page=homepage');
+        }
+
+        $id = $this->getIdFromUrl();
+
+        if(!$id){
+            return $this->render('404Template');
+        }
+
+        $postRepository = new PostRepository();
+        $postArray = $postRepository->find($id);
+
+        if(!$postArray){
+            $this->addFlash('danger', 'This post does not exist');
+            $this->redirect('http://blogoc/?page=post&action=list');
+        }
+
+        $normalizer = new NormalizerService();
+        $post = $normalizer->normalize($postArray, PostEntity::class);
+
+
+        if($_POST){
+            $validator = new ValidatorService();
+            $formContainsError = $this->formHasError($validator);
+
+            if($formContainsError){
+                return $this->render('CreatePostTemplate');
+            }
+
+            if(!in_array($_POST['status'], [PostEntity::STATUS_DRAFT, PostEntity::STATUS_ONLINE])){
+                $this->addFlash('danger', 'Status is not valid');
+                $this->redirect('http://blogoc/?page=post&action=create');
+            }
+
+            $newStatus = $_POST['status'];
+            $newTitle = $_POST['title'];
+            $newHead = $_POST['head'];
+            $newContent = $_POST['content'];
+
+            $hasUpdate = false;
+
+            if($post->getStatus() !== $newStatus){
+                $post->setStatus(htmlspecialchars($newStatus));
+                $hasUpdate = true;
+            }
+
+            if($post->getTitle() !== $newTitle){
+                $post->setTitle(htmlspecialchars($newTitle));
+                $hasUpdate = true;
+            }
+
+            if($post->getHead() !== $newHead){
+                $post->setHead(htmlspecialchars($newHead));
+                $hasUpdate = true;
+            }
+
+            if($post->getContent() !== $newContent){
+                $post->setContent(htmlspecialchars($newContent));
+                $hasUpdate = true;
+            }
+
+            if($hasUpdate){
+                $postArray = $normalizer->denormalize($post);
+                $postRepository->update($postArray, $post->getId());
+                $this->addFlash('success', 'The post has been updated');
+            }
+        }
+
+
+        // modifier les champs titre, chapô, auteur et contenu
+        $this->render('EditPostTemplate', ['post' => $post]);
     }
 
 

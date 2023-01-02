@@ -50,21 +50,21 @@
             <td><?= $comment->getCreatedAt() ?></td>
             <td>
                 <?php if ($commentStatus === 'waiting'){ ?>
-                    <a href="http://blogoc/?page=comment&action=update&id=<?= $commentId ?>&status=valid" 
+                    <a href="http://blogoc/?page=comment&action=updateStatus&id=<?= $commentId ?>&status=valid" 
                        class="btn btn-success d-block">
                         valid
                     </a>
-                    <a href="http://blogoc/?page=comment&action=update&id=<?= $commentId ?>&status=invalid" 
+                    <a href="http://blogoc/?page=comment&action=updateStatus&id=<?= $commentId ?>&status=invalid" 
                        class="btn btn-warning d-block mt-1">
                         invalid
                     </a>
                 <?php }else if ($commentStatus === 'valid'){ ?>
-                    <a href="http://blogoc/?page=comment&action=update&id=<?= $commentId ?>&status=invalid" 
+                    <a href="http://blogoc/?page=comment&action=updateStatus&id=<?= $commentId ?>&status=invalid" 
                        class="btn btn-warning d-block">
                         invalid
                     </a>
                 <?php }else{ ?>
-                    <a href="http://blogoc/?page=comment&action=update&id=<?= $commentId ?>&status=valid" 
+                    <a href="http://blogoc/?page=comment&action=updateStatus&id=<?= $commentId ?>&status=valid" 
                        class="btn btn-success d-block">
                         valid
                     </a>

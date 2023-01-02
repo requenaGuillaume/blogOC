@@ -5,7 +5,7 @@ namespace App\Repository;
 final class PostRepository extends PDOAbstractRepository
 {
     protected string $table = 'post';
-    protected array $optionnalColumns = ['comments' => 'comments', 'created_at' => 'created_at'];
+    protected array $optionnalColumns = ['comments' => 'comments', 'created_at' => 'created_at', 'id' => 'id'];
     protected array $requiredColumns = [
         'title' => 'title', 
         'author_id' => 'author_id', 

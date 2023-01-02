@@ -115,6 +115,15 @@ final class CommentController extends AdminController implements AdminInterface,
 
     public function update()
     {
+        // not editable
+        $this->render('404Template');
+    }
+
+
+    // =============== Other functions =============== \\
+
+    public function updateStatus()
+    {
         if(!$this->getUser() || !$this->currentUserIsAdmin()){
             $this->redirect('http://blogoc/?page=homepage');
         }
