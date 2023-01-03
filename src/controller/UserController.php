@@ -15,7 +15,9 @@ final class UserController extends AdminController implements AdminInterface, Fo
 {
 
     private const VALID_REGISTER_FIELDS_NAME = ['pseudo', 'email', 'pass', 'verifpass'];
+    private const VALID_UPDATE_FIELDS_NAME = ['pseudo', 'email'];
 
+    private bool $isRegister = false;
 
     public function run()
     {
@@ -73,6 +75,7 @@ final class UserController extends AdminController implements AdminInterface, Fo
     public function create()
     {
         if($_POST){
+            $this->isRegister = true;
 
             $validator = new ValidatorService();
             $formContainsError = $this->formHasError($validator);
@@ -128,7 +131,71 @@ final class UserController extends AdminController implements AdminInterface, Fo
 
     public function update()
     {
-        //
+        if(!$this->getUser()){
+            $this->addFlash('danger', 'You must be logged in to access this page');
+            $this->redirect('http://blogoc/?page=homepage');
+        }
+
+        $id = $this->getIdFromUrl();
+
+        if(!$id){
+            return $this->render('404Template');
+        }
+
+        if(!$this->currentUserIsAdmin() && $this->getUser()->getId() !== $id){
+            $this->addFlash('danger', 'You cannot access to another member\'s profile page');
+            $this->redirect('http://blogoc/?page=homepage');
+        }
+
+        $userRepository = new UserRepository();
+        $userArray = $userRepository->find($id);
+
+        if(!$userArray){
+            $this->addFlash('danger', 'This user does not exist');
+            $this->redirect('http://blogoc/?page=homepage');
+        }
+
+        $normalizer = new NormalizerService();
+        $user = $normalizer->normalize($userArray, UserEntity::class);
+
+        if($_POST){
+            $this->isRegister = false;
+            $validator = new ValidatorService();
+            $formContainsError = $this->formHasError($validator);
+
+            if($formContainsError){
+                return $this->render('UserProfilTemplate', ['user' => $user]);
+            }
+
+            $newPseudo = $_POST['pseudo'];
+            $newEmail = $_POST['email'];
+
+            $hasUpdate = false;
+
+            if($user->getPseudo() !== $newPseudo){
+                $user->setPseudo(htmlspecialchars($newPseudo));
+                $hasUpdate = true;
+            }
+
+            if($user->getMail() !== $newEmail){
+                $user->setMail(htmlspecialchars($newEmail));
+                $hasUpdate = true;
+            }
+
+            if(!$hasUpdate){
+                $this->addFlash('warning', 'No changes detected');
+                return $this->render('UserProfilTemplate', ['user' => $user]);
+            }
+
+            $userWithNewDataArray = $normalizer->denormalize($user);
+            $userRepository->update($userWithNewDataArray, $user->getId());
+
+            $_SESSION['user'] = $user;
+            $this->addFlash('success', 'Your data has been updated !');
+            $this->redirect("http://blogoc/?page=user&action=update&id={$user->getId()}");
+        }
+
+        return $this->render('UserProfilTemplate', ['user' => $user]);
     }
 
 
@@ -177,13 +244,15 @@ final class UserController extends AdminController implements AdminInterface, Fo
 
     public function formHasError(ValidatorInterface $validator): bool
     {
-        $error = $this->verifyInputCount(count($_POST), 4);
+        $numberOfFields = $this->isRegister ? 4 : 2;
+        $error = $this->verifyInputCount(count($_POST), $numberOfFields);
         if($error){
             $this->addFlash('danger', $error);
             return true;               
         }
 
-        $error = $this->verifyInputsValidity($_POST, self::VALID_REGISTER_FIELDS_NAME);
+        $validFields = $this->isRegister ? self::VALID_REGISTER_FIELDS_NAME : self::VALID_UPDATE_FIELDS_NAME;
+        $error = $this->verifyInputsValidity($_POST, $validFields);
         if($error){
             $this->addFlash('danger', $error); 
             return true;                 
@@ -193,19 +262,21 @@ final class UserController extends AdminController implements AdminInterface, Fo
             return true;
         }
 
-        if($_POST['pass'] !== $_POST['verifpass'] ){
-            $this->addFlash('danger', "Passwords fields does not match");  
-            return true;           
-        }
-
         if($this->dataHasFormatError($validator)){
             return true;
         }
 
-        $error = $this->verifyPasswordFormat($validator);
-        if($error){
-            $this->addFlash('danger', $error);  
-            return true;                
+        if($this->isRegister){
+            if($_POST['pass'] !== $_POST['verifpass'] ){
+                $this->addFlash('danger', "Passwords fields does not match");  
+                return true;           
+            }
+    
+            $error = $this->verifyPasswordFormat($validator);
+            if($error){
+                $this->addFlash('danger', $error);  
+                return true;                
+            }
         }
 
         return false;
@@ -245,10 +316,12 @@ final class UserController extends AdminController implements AdminInterface, Fo
             return true;                
         }
 
-        $error = $this->verifyDataLenght($validator, 'pass', 6, 40);
-        if($error){
-            $this->addFlash('danger', $error);   
-            return true;               
+        if($this->isRegister){
+            $error = $this->verifyDataLenght($validator, 'pass', 6, 40);
+            if($error){
+                $this->addFlash('danger', $error);   
+                return true;               
+            }
         }
 
         return false;

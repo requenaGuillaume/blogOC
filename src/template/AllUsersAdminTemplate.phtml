@@ -5,6 +5,7 @@
         <th>role</th>
         <th>pseudo</th>
         <th>email</th>
+        <th>update</th>
         <th>change role</th>
         <th>supprimer</th>
     </thead>
@@ -29,6 +30,9 @@
             </td>
             <td><?= $user->getPseudo(); ?></td>
             <td><?= $user->getMail(); ?></td>
+            <td>
+                <a href="http://blogoc/?page=user&action=update&id=<?= $userId ?>" class="btn btn-warning d-block">edit</a>    
+            </td>
             <td>
                 <?php if($role === 'user'){ ?>
                     <a href="http://blogoc/?page=user&action=updateStatus&id=<?= $userId ?>" class="btn btn-success d-block">admin</a>
