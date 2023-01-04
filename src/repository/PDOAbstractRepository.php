@@ -136,7 +136,6 @@ abstract class PDOAbstractRepository implements RepositoryInterface
         $iteration = 1;
 
         foreach($values as $key => $value){
-            // TODO : if $key = id, continue;
             $securedValue = htmlspecialchars($value);
 
             if($iteration === 1){
