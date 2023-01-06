@@ -1,0 +1,33 @@
+<?php use App\Entity\PostEntity; ?>
+<h1 class="text-center mt-3 mb-5">Edit post <?= ucfirst($post->getTitle()) ?></h1>
+
+<form method="post">
+    <div class="mb-2">
+        <label for="title" class="form-label">Title :</label>
+        <input type="text" name="title" class="form-control" value="<?= ucfirst($post->getTitle()) ?>">
+    </div>
+
+    <div class="mb-2">
+        <label for="status" class="form-label">Status :</label>
+        <select name="status" class="form-select">
+            <option value="<?= PostEntity::STATUS_DRAFT ?>" <?php if($post->getStatus() === PostEntity::STATUS_DRAFT){ echo 'selected'; } ?> >
+                <?= ucfirst(PostEntity::STATUS_DRAFT) ?>
+            </option>
+            <option value="<?= PostEntity::STATUS_ONLINE ?>" <?php if($post->getStatus() === PostEntity::STATUS_ONLINE){ echo 'selected'; } ?>>
+                <?= ucfirst(PostEntity::STATUS_ONLINE) ?>
+            </option>
+        </select>
+    </div>
+
+    <div class="mb-2">
+        <label for="head" class="form-label">Head :</label>
+        <textarea name="head" class="form-control" style="height: 100px" ><?= ucfirst($post->getHead()) ?></textarea>
+    </div>
+
+    <div class="mb-2">
+        <label for="content" class="form-label">Content :</label>
+        <textarea name="content" class="form-control" style="height: 100px" ><?= ucfirst($post->getContent()) ?></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Edit</button>
+</form>

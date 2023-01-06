@@ -2,7 +2,10 @@
 
 namespace App\Service;
 
-class ValidatorService
+use App\Interface\ValidatorInterface;
+
+
+class ValidatorService implements ValidatorInterface
 {
 
     public function checkValidity(string $data, string $regex): bool
@@ -18,7 +21,7 @@ class ValidatorService
     {
         $dataLength = strlen($data);
 
-        if($dataLength >= $minLength && $dataLength < $maxLength){
+        if($dataLength >= $minLength && $dataLength <= $maxLength){
             return true;
         }
 

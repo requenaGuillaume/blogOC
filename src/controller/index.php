@@ -1,2 +1,4 @@
 <?php
-// TODO : Redirect to 404 not found page
+
+header("Location: http://blogoc/?page=404");
+exit;

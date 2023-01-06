@@ -1,0 +1,16 @@
+<h1 class="text-center mt-3 mb-5">Posts</h1>
+<div class="d-flex flex-wrap justify-content-between">
+    <?php foreach($posts as $post){ ?>
+        <div class="card mt-4" style="width:18rem;">
+            <img src="#" class="card-img-top" alt="">
+            <div class="card-body">
+                <h5 class="card-title"><?= $post->getTitle() ?></h5>
+                <p>Created : <?= $post->getCreatedAt() ?> </p>
+                <p class="card-text"><?= $post->getHead() ?></p>
+                <a href="http://blogoc/?page=post&action=show&id=<?= $post->getId() ?>" class="btn btn-primary">
+                    Liens vers l'article
+                </a>
+            </div>
+        </div>
+    <?php } ?>
+</div>

@@ -3,11 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\UserEntity;
-use App\Service\ValidatorService;
-
+use App\Controller\AbstractController;
+use App\Interface\ValidatorInterface;
 
 abstract class AbstractFormController extends AbstractController
 {
+    
     protected function verifyInputCount(int $numberOfInputFound, int $expected): ?string
     {
         if($numberOfInputFound !== $expected){
@@ -33,7 +34,7 @@ abstract class AbstractFormController extends AbstractController
         return null;
     }
 
-    protected function verifyDataLenght(ValidatorService $validator, string $inputName, int $minLength, int $maxLength): ?string
+    protected function verifyDataLenght(ValidatorInterface $validator, string $inputName, int $minLength, int $maxLength): ?string
     {
         if(!$validator->checkLength($_POST[$inputName], $minLength, $maxLength)){
             return "Your $inputName length should be at least $minLength characters and max $maxLength characters";
@@ -42,16 +43,16 @@ abstract class AbstractFormController extends AbstractController
         return null;
     }
 
-    protected function verifyDataFormat(ValidatorService $validator, string $inputName, string $regex): ?string
+    protected function verifyDataFormat(ValidatorInterface $validator, string $inputName, string $regex): ?string
     {
         if(!$validator->checkValidity($_POST[$inputName], $regex)){
-            return "Your pseudo doesn't respect the format";
+            return "Your $inputName doesn't respect the format";
         }
 
         return null;
     }
 
-    protected function verifyPasswordFormat(ValidatorService $validator): ?string
+    protected function verifyPasswordFormat(ValidatorInterface $validator): ?string
     {
         if(
             !$validator->checkValidity($_POST['pass'], UserEntity::REGEX_PASSWORD_1)

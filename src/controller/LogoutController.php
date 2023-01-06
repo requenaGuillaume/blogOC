@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-class LogoutController extends AbstractController
+final class LogoutController extends AbstractController
 {
     public function run()
     {

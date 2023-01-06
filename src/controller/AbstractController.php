@@ -43,4 +43,16 @@ abstract class AbstractController
         return null;
     }
 
+
+    protected function currentUserIsAdmin(): bool
+    {
+        $user = $this->getUser();
+
+        if($user->getRole() === UserEntity::ROLE_ADMIN){
+            return true;
+        }
+
+        return false;
+    }
+
 }

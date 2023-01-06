@@ -1,0 +1,82 @@
+<h1 class="text-center mt-3 mb-5">Comments</h1>
+
+<table class="table table-dark table-striped">
+    <thead>
+        <th>id</th>
+        <th>status</th>
+        <th>post_id</th>
+        <th>author_id</th>
+        <th>content</th>
+        <th>created_at</th>
+        <th>change status</th>
+        <th>supprimer</th>
+    </thead>
+
+    <tbody>
+        <?php foreach($comments as $comment){ 
+            $commentId = $comment->getId();
+            $commentStatus = $comment->getStatus();
+            $postId = $comment->getPostId();
+            $authorId = $comment->getAuthorId();
+        ?>
+        <tr>
+            <td>
+                <a href="http://blogoc/?page=post&action=show&id=<?= $postId ?>"
+                   class="link-info text-decoration-none">
+                    <?= $commentId ?>
+                </a>
+            </td>
+
+            <td class="text-<?php 
+                    if($commentStatus === 'valid'){ echo 'success';}
+                    elseif($commentStatus === 'invalid'){ echo 'danger';}
+                    else{ echo 'light'; }
+                ?>">
+                <?= ucfirst($commentStatus) ?>
+            </td>
+            <td>
+                <a href="http://blogoc/?page=post&action=show&id=<?= $postId ?>" 
+                       class="link-primary text-decoration-none">
+                        <?= $postId ?>
+                </a> 
+            </td>
+            <td>
+                <a href="http://blogoc/?page=user&action=show&id=<?= $authorId ?>" 
+                       class="link-primary text-decoration-none">
+                        <?= $authorId ?>
+                </a> 
+            </td>
+            <td><?= $comment->getContent() ?></td>
+            <td><?= $comment->getCreatedAt() ?></td>
+            <td>
+                <?php if ($commentStatus === 'waiting'){ ?>
+                    <a href="http://blogoc/?page=comment&action=updateStatus&id=<?= $commentId ?>&status=valid" 
+                       class="btn btn-success d-block">
+                        valid
+                    </a>
+                    <a href="http://blogoc/?page=comment&action=updateStatus&id=<?= $commentId ?>&status=invalid" 
+                       class="btn btn-warning d-block mt-1">
+                        invalid
+                    </a>
+                <?php }else if ($commentStatus === 'valid'){ ?>
+                    <a href="http://blogoc/?page=comment&action=updateStatus&id=<?= $commentId ?>&status=invalid" 
+                       class="btn btn-warning d-block">
+                        invalid
+                    </a>
+                <?php }else{ ?>
+                    <a href="http://blogoc/?page=comment&action=updateStatus&id=<?= $commentId ?>&status=valid" 
+                       class="btn btn-success d-block">
+                        valid
+                    </a>
+                <?php } ?>
+            </td>
+            <td>
+                <a href="http://blogoc/?page=comment&action=delete&id=<?= $commentId ?>" 
+                   class="btn btn-danger d-block">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
+            </td>
+        </tr>
+        <?php } ?>
+    </tbody>
+</table>

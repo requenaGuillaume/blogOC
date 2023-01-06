@@ -10,7 +10,6 @@ final class UserEntity extends AbstractEntity
     private string $pseudo;
     private string $password;
 
-    // TODO : Enum => require PHP 8.1, i'm at 8.0.13
     public const ROLE_USER = 'user';
     public const ROLE_ADMIN = 'admin';
 
@@ -74,6 +73,15 @@ final class UserEntity extends AbstractEntity
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function isAdmin(): bool
+    {
+        if($this->role === self::ROLE_ADMIN){
+            return true;
+        }
+
+        return false;
     }
 
 }

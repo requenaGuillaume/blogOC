@@ -10,12 +10,14 @@ final class PostEntity extends AbstractEntity
     private int $authorId;
     private string $head;
     private string $lastUpdate;
+    private string $createdAt;
     private string $status;
     private string $content;
     private string $slug;
 
     public const STATUS_DRAFT = 'draft';
     public const STATUS_ONLINE = 'online';
+    public const REGEX_TEXT = '/^[A-Za-z0-9]+[A-Za-z0-9,;:€$£)(°&|\'-_\s]{0,}[A-Za-z0-9!?.]+$/';
 
 
     public function listProperties(): array
@@ -88,6 +90,17 @@ final class PostEntity extends AbstractEntity
     public function getLastUpdate(): string
     {
         return $this->lastUpdate;
+    }
+
+    public function setCreatedAt(string $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
     }
 
     public function setStatus(string $status): self

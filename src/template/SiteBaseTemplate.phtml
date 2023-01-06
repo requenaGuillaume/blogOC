@@ -21,11 +21,13 @@
         crossorigin="anonymous"
       />
   </head>
-  <body class="container">
+  <body>
 
     <?php 
 
         require 'src/template/partial/header.phtml';
+
+        echo "<main class='container'>";
 
         if(isset($_SESSION['flash'])){
           foreach($_SESSION['flash'] as $bootstrapClass => $typeOfMessage){
@@ -36,7 +38,7 @@
           unset($_SESSION['flash']);
         }
 
-        echo $pageContent;
+        echo "$pageContent</main>";
 
         require 'src/template/partial/footer.phtml';
 

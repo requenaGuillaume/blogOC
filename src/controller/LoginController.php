@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\UserEntity;
+use App\Interface\FormInterface;
 use App\Service\ValidatorService;
 use App\Repository\UserRepository;
 use App\Service\NormalizerService;
+use App\Interface\ValidatorInterface;
 use App\Controller\AbstractFormController;
 
-class LoginController extends AbstractFormController
+final class LoginController extends AbstractFormController implements FormInterface
 {
 
     private const VALID_LOGIN_FIELDS_NAME = ['email', 'pass'];
@@ -18,7 +20,6 @@ class LoginController extends AbstractFormController
     {
         if($_POST){
 
-            // TODO => add a ValidatorInterface ? and in method's signature type ValidatorInterface ???
             $validator = new ValidatorService();
             $formContainsError = $this->formHasError($validator);
 
@@ -36,7 +37,6 @@ class LoginController extends AbstractFormController
             }
 
             $normalizer = new NormalizerService();
-
             $userEntity = $normalizer->normalize($user, UserEntity::class);
 
             if(password_verify($_POST['pass'], $userEntity->getPassword())){
@@ -51,7 +51,9 @@ class LoginController extends AbstractFormController
     }
 
 
-    private function formHasError(ValidatorService $validator): bool
+    // =============== FormInterface functions =============== \\
+
+    public function formHasError(ValidatorInterface $validator): bool
     {
         $error = $this->verifyInputCount(count($_POST), 2);
         if($error){
@@ -69,23 +71,22 @@ class LoginController extends AbstractFormController
             return true;
         }
 
-        $error = $this->verifyDataFormat($validator, 'email', UserEntity::REGEX_EMAIL);
+        $error = $this->dataHasFormatError($validator);
+        if($error){
+            return true;                
+        }
+
+        $error = $this->verifyPasswordFormat($validator);        
         if($error){
             $this->addFlash('danger', $error);  
             return true;                
         }
-
-        $error = $this->verifyPasswordFormat($validator);
-        if($error){
-            $this->addFlash('danger', $error);  
-            return true;                
-        }
-
+        
         return false;
     }
 
 
-    private function inputsHasDataLengthError(ValidatorService $validator): bool
+    public function inputsHasDataLengthError(ValidatorInterface $validator): bool
     {
         $error = $this->verifyDataLenght($validator, 'email', 2, 40);
         if($error){
@@ -97,6 +98,18 @@ class LoginController extends AbstractFormController
         if($error){
             $this->addFlash('danger', $error);   
             return true;               
+        }
+
+        return false;
+    }
+
+
+    public function dataHasFormatError(ValidatorInterface $validator): bool
+    {
+        $error = $this->verifyDataFormat($validator, 'email', UserEntity::REGEX_EMAIL);        
+        if($error){
+            $this->addFlash('danger', $error);
+            return true;             
         }
 
         return false;

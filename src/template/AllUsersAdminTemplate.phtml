@@ -1,0 +1,51 @@
+<h1 class="text-center mt-3 mb-5">Users</h1>
+<table class="table table-dark table-striped table-hover">
+    <thead>
+        <th>id</th>
+        <th>role</th>
+        <th>pseudo</th>
+        <th>email</th>
+        <th>update</th>
+        <th>change role</th>
+        <th>supprimer</th>
+    </thead>
+
+    <tbody>
+        <?php foreach($users as $user){ 
+            $userId = $user->getId();
+            $role = $user->getRole();
+        ?>
+        <tr>
+            <td>
+                <a href="http://blogoc/?page=user&action=show&id=<?= $userId ?>"
+                    class="link-info text-decoration-none">
+                    <?= $userId ?>
+                </a>
+            </td>
+            <td class="text-<?php
+                    if($role === 'admin'){ echo 'success';}
+                    else{ echo 'primary';}
+                ?>">
+                <?= ucfirst($role) ?>           
+            </td>
+            <td><?= $user->getPseudo(); ?></td>
+            <td><?= $user->getMail(); ?></td>
+            <td>
+                <a href="http://blogoc/?page=user&action=update&id=<?= $userId ?>" class="btn btn-warning d-block">edit</a>    
+            </td>
+            <td>
+                <?php if($role === 'user'){ ?>
+                    <a href="http://blogoc/?page=user&action=updateStatus&id=<?= $userId ?>" class="btn btn-success d-block">admin</a>
+                <?php }else{ ?>
+                    <a href="http://blogoc/?page=user&action=updateStatus&id=<?= $userId ?>" class="btn btn-primary d-block">user</a>
+                <?php } ?>
+            </td>
+            <td>
+                <a href="http://blogoc/?page=user&action=delete&id=<?= $userId ?>" class="btn btn-danger d-block">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
+            </td>
+        </tr>
+        <?php } ?>
+    </tbody>
+</table>

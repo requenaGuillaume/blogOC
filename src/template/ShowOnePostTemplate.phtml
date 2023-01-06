@@ -1,0 +1,59 @@
+<?php $postTitle = ucfirst($post->getTitle()); 
+
+if($user->isAdmin()){ ?>
+    <a href="http://blogoc/?page=post&action=delete&id=<?= $post->getId() ?>"
+       class="btn btn-danger mb-2">
+        Delete
+    </a>
+    <a href="http://blogoc/?page=post&action=update&id=<?= $post->getId() ?>"
+       class="btn btn-warning mb-2">
+        Update
+    </a>
+<?php } ?>
+
+
+<h1 class="text-center mt-3 mb-5"><?= $postTitle ?></h1>
+
+<div>
+    <p>Crée par <?= $author->getPseudo() ?> (last update : <?= $post->getLastUpdate() ?>)</p>
+    <p><?= $post->getHead() ?></p>
+    <p><?= $post->getContent() ?></p>
+</div>
+
+<?php if(!$user){ ?>
+
+<p class="text-decoration-underline">You mus be logged in to write a comment</p>
+
+<?php }else{ ?>
+
+<h2>Write a comment</h2>
+
+<form method="post" action="http://blogoc/?page=comment&action=create" class="mb-5">
+    <p>As <?= $user->getPseudo() ?></p>
+
+    <div class="mb-2">
+        <label for="content" class="form-label">Content :</label>
+        <textarea name="content" class="form-control" style="height: 100px" placeholder="Your comment"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>
+
+<?php } ?>
+
+<div>
+    <?php foreach($comments as $commentInfos){ 
+        $comment = $commentInfos['comment'];
+
+        if($comment->getStatus() !== $validStatus){
+            continue;
+        }
+        
+        $commentAuthor = $commentInfos['author'];
+    ?>
+        <div>
+            <p class="fw-bold"><?= $commentAuthor->getPseudo() ?> written at <?= $comment->getCreatedAt() ?></p>
+            <p><?= $comment->getContent() ?></p>
+        </div>
+    <?php } ?>
+</div>

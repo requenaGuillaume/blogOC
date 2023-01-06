@@ -1,0 +1,20 @@
+<h1 class="text-center mt-3 mb-5">Profil</h1>
+
+<div class="ml-auto mr-auto">
+    <p>Identifiant : <?= $user->getId() ?></p>
+    <p>Role : <?= $user->getRole() ?></p>
+    
+    <form method="post" action="http://blogoc/?page=user&action=update&id=<?= $user->getId() ?>">
+        <div class="mb-2">
+            <label for="pseudo" class="form-label">Pseudo </label>
+            <input type="text" name="pseudo"  value="<?= $user->getPseudo() ?>">
+        </div>
+    
+        <div class="mb-2">
+            <label for="email" class="form-label">Email </label>
+            <input type="email" name="email"  value="<?= $user->getMail() ?>">
+        </div>
+    
+        <button type="submit" class="btn btn-success">Edit</button>
+    </form>
+</div>

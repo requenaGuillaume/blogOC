@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-class HomepageController extends AbstractController
+final class HomepageController extends AbstractController
 {
     public function run()
     {
