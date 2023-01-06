@@ -2,66 +2,48 @@
     <div class="container">
         <section class="mt-5">
             <div class="row text-center d-flex justify-content-center pt-5">
-                <div class="col-md-2">
-                    <h6 class="text-uppercase font-weight-bold">
-                        <a href="#!" class="text-white">About us</a>
-                    </h6>
-                </div>
+                <?php if($this->getUser() && $this->getUser()->getRole() === 'admin'){ ?> 
+                    <div class="col-md-2">
+                        <h6 class="text-uppercase font-weight-bold">
+                            <a class="nav-link text-light" href="http://blogoc/?page=admin">Admin</a>
+                        </h6>
+                    </div>
 
-                <div class="col-md-2">
-                    <h6 class="text-uppercase font-weight-bold">
-                        <a href="#!" class="text-white">Products</a>
-                    </h6>
-                </div>
+                    <div class="col-md-2">
+                        <h6 class="text-uppercase font-weight-bold">
+                            <a class="nav-link text-light" href="http://blogoc/?page=user&action=list">Users</a>
+                        </h6>
+                    </div>
 
-                <div class="col-md-2">
-                    <h6 class="text-uppercase font-weight-bold">
-                        <a href="#!" class="text-white">Awards</a>
-                    </h6>
-                </div>
+                    <div class="col-md-2">
+                        <h6 class="text-uppercase font-weight-bold">
+                            <a class="nav-link text-light" href="http://blogoc/?page=post&action=list">Posts</a>
+                        </h6>
+                    </div>
 
-                <div class="col-md-2">
-                    <h6 class="text-uppercase font-weight-bold">
-                        <a href="#!" class="text-white">Help</a>
-                    </h6>
-                </div>
+                    <div class="col-md-2">                       
+                        <h6 class="text-uppercase font-weight-bold">
+                            <a class="nav-link text-light" href="http://blogoc/?page=post&action=create">New post</a>
+                        </h6>
+                    </div>
 
-                <div class="col-md-2">
-                    <h6 class="text-uppercase font-weight-bold">
-                        <a href="#!" class="text-white">Contact</a>
-                    </h6>
-                </div>
+                    <div class="col-md-2">
+                        <h6 class="text-uppercase font-weight-bold">
+                            <a class="nav-link text-light" href="http://blogoc/?page=comment&action=list">Comments</a>
+                        </h6>
+                    </div>
+                <?php } ?>
             </div>
         </section>
 
-        <hr class="my-5" />
-
-        <section class="mb-5">
-            <div class="row d-flex justify-content-center">
-                <div class="col-lg-8">
-                    <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-                        distinctio earum repellat quaerat voluptatibus placeat nam,
-                        commodi optio pariatur est quia magnam eum harum corrupti
-                        dicta, aliquam sequi voluptate quas.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section class="text-center mb-5">
-            <a href="https://www.linkedin.com/in/requenaguillaume" class="text-white me-4">
-                <i class="fab fa-linkedin"></i>
-            </a>
-            <a href="https://github.com/requenaGuillaume" class="text-white me-4">
-                <i class="fab fa-github"></i>
-            </a>
+        <section class="text-center mb-5 mt-5">
+            <?php require 'src/template/partial/social.phtml'; ?>
         </section>
     </div>
 
     <hr/>
 
     <div class="text-center p-3 bg-dark">
-        <p>© 2020 Copyright blogOC</p>
+        <p>© 2023 Copyright blogOC</p>
     </div>
 </footer>

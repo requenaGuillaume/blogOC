@@ -1,46 +1,45 @@
 <h1 class="text-center mt-3 mb-5">Requena Guillaume</h1>
 
-<form method="post">
-    <div class="mb-2">
-        <label for="lastName" class="form-label">Your Last name :</label>
-        <input type="text" name="lastName" class="form-control" placeholder="Last Name">
-    </div>
+<div class="d-flex justify-content-evenly">
+    <section class="text-center mb-5">
+        <h2 class="mb-3 mt-3">CV</h2>
+        <a href="assets/pdf/cv.pdf" class="btn btn-danger" target="_blank">
+            PDF
+        </a>        
+        <a href="https://requenaguillaume.github.io/" class="btn btn-success" target="_blank">
+            Online
+        </a>        
+    </section>
+    
+    <section class="text-center mb-5">
+        <h2 class="mb-3 mt-3">Social</h2>
+        <?php require 'src/template/partial/social.phtml'; ?>
+    </section>
+</div>
 
-    <div class="mb-2">
-        <label for="firstName" class="form-label">Your First name :</label>
-        <input type="text" name="firstName" class="form-control" placeholder="First Name">
-    </div>
-
-    <div class="mb-2">
-        <label for="email" class="form-label">Your Email :</label>
-        <input type="email" name="email" class="form-control" placeholder="Email">
-    </div>
-
-    <div class="mb-2">
-        <label for="content" class="form-label">Your message :</label>
-        <textarea name="content" class="form-control" style="height: 100px" placeholder="Write content..."></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-success">Envoyer</button>
-</form>
-
-<section class="text-center mb-5">
-    <h2>CV</h2>
-    <a href="assets/pdf/cv.pdf" class="text-dark me-4" target="_blank">
-        PDF
-    </a>
-    <a href="https://requenaguillaume.github.io/" class="text-dark me-4" target="_blank">
-        Online
-    </a>
-</section>
-
-<!-- TODO button -->
-<section class="text-center mb-5">
-    <h2>Social</h2>
-    <a href="https://www.linkedin.com/in/requenaguillaume" class="text-dark me-4" target="_blank">
-        <i class="fab fa-linkedin"></i>
-    </a>
-    <a href="https://github.com/requenaGuillaume" class="text-dark me-4" target="_blank">
-        <i class="fab fa-github"></i>
-    </a>
+<section>
+    <h2>Contact</h2>
+    <form method="post">
+        <div class="mb-2">
+            <label for="lastName" class="form-label">Your Last name :</label>
+            <input type="text" name="lastName" class="form-control" placeholder="Last Name">
+        </div>
+    
+        <div class="mb-2">
+            <label for="firstName" class="form-label">Your First name :</label>
+            <input type="text" name="firstName" class="form-control" placeholder="First Name">
+        </div>
+    
+        <div class="mb-2">
+            <label for="email" class="form-label">Your Email :</label>
+            <input type="email" name="email" class="form-control" placeholder="Email">
+        </div>
+    
+        <div class="mb-2">
+            <label for="content" class="form-label">Your message :</label>
+            <textarea name="content" class="form-control" style="height: 100px" placeholder="Write content..."></textarea>
+        </div>
+    
+        <button type="submit" class="btn btn-success">Envoyer</button>
+    </form>
 </section>
