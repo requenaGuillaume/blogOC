@@ -269,13 +269,13 @@ final class UserController extends AdminController implements AdminInterface, Fo
         if($this->isRegister){
             if($_POST['pass'] !== $_POST['verifpass'] ){
                 $this->addFlash('danger', "Passwords fields does not match");  
-                return true;           
+                return true;
             }
     
             $error = $this->verifyPasswordFormat($validator);
             if($error){
-                $this->addFlash('danger', $error);  
-                return true;                
+                $this->addFlash('danger', $error);
+                return true;
             }
         }
 
@@ -306,21 +306,21 @@ final class UserController extends AdminController implements AdminInterface, Fo
     {
         $error = $this->verifyDataLenght($validator, 'pseudo', 2, 40);
         if($error){
-            $this->addFlash('danger', $error);  
-            return true;                
+            $this->addFlash('danger', $error);
+            return true;
         }
 
         $error = $this->verifyDataLenght($validator, 'email', 2, 40);
         if($error){
-            $this->addFlash('danger', $error);  
-            return true;                
+            $this->addFlash('danger', $error);
+            return true;
         }
 
         if($this->isRegister){
             $error = $this->verifyDataLenght($validator, 'pass', 6, 40);
             if($error){
-                $this->addFlash('danger', $error);   
-                return true;               
+                $this->addFlash('danger', $error);
+                return true;
             }
         }
 
@@ -332,14 +332,14 @@ final class UserController extends AdminController implements AdminInterface, Fo
     {
         $error = $this->verifyDataFormat($validator, 'pseudo', UserEntity::REGEX_PSEUDO);
         if($error){
-            $this->addFlash('danger', $error);  
-            return true;                
+            $this->addFlash('danger', $error);
+            return true;
         }
 
         $error = $this->verifyDataFormat($validator, 'email', UserEntity::REGEX_EMAIL);
         if($error){
-            $this->addFlash('danger', $error);  
-            return true;                
+            $this->addFlash('danger', $error);
+            return true;
         }
 
         return false;

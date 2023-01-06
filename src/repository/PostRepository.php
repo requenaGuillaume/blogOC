@@ -14,6 +14,6 @@ final class PostRepository extends PDOAbstractRepository
         'status' => 'status',
         'content' => 'content',
         'slug' => 'slug'
-    ];
+    ];    
 
 }

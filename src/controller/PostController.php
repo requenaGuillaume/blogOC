@@ -242,13 +242,18 @@ final class PostController extends AdminController implements AdminInterface, Fo
 
             if($hasUpdate){
                 $postArray = $normalizer->denormalize($post);
+
+                // Remove data to not update
+                unset($postArray['comments']);
+                unset($postArray['created_at']);
+
                 $postRepository->update($postArray, $post->getId());
                 $this->addFlash('success', 'The post has been updated');
             }
         }
 
 
-        // modifier les champs titre, chapô, auteur et contenu
+        // TODO : modifier le champ auteur
         $this->render('EditPostTemplate', ['post' => $post]);
     }
 
