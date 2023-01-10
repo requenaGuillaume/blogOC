@@ -32,7 +32,8 @@ final class HomepageController extends AbstractFormController implements FormInt
 
             $mailService = new MailService();
 
-            if($mailService->send($data)){
+            // if($mailService->send($data)){
+            if($mailService->send()){
                 $this->addFlash('success', 'Your message has been sent');
             }else{
                 $this->addFlash('danger', 'An error has occured, please try again');

@@ -2,26 +2,54 @@
 
 namespace App\Service;
 
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+
 class MailService
 {
 
-    public function send(array $data)
+    private PHPMailer $phpMailer;
+
+
+    public function __construct()
     {
-        $header = "MIME-Version: 1.0\r\n";
-        $header .= 'From: "BlogOC"<contact@blogoc.com>'. "\n"; 
-        $header .= "Content-Type:text/html; charset='utf-8'" ."\n";
-        $header .= "Content-Transfer-Encoding: 8bit";
+        $this->phpMailer = new PHPMailer(true);
+    }
 
-        ob_start();
-        require_once 'C:\wamp64\www\blogOC\src\template\MailTemplate.phtml';
-        $message = ob_get_contents();
-        ob_end_clean();
 
-        ini_set('SMTP', 'smtp.gmail.com');
-        ini_set('smtp_port', '587');
-        ini_set('sendmail_from', 'ulfhedinn2@gmail.com');
+    public function send(): bool
+    {
+        try {
+            // Server settings
+            $this->phpMailer->SMTPDebug = SMTP::DEBUG_SERVER;
+            $this->phpMailer->isSMTP();
+            $this->phpMailer->SMTPAuth   = true;
+            $this->phpMailer->Host = 'smtp.mailtrap.io';
+            $this->phpMailer->Port = 2525;
+            $this->phpMailer->Username = 'be1ed0603d4451';
+            $this->phpMailer->Password = 'dad57734a9e6eb';
 
-        return mail('ulfhedinn2@gmail.com', 'BlogOC', $message, $header);
+            // Recipients
+            $this->phpMailer->setFrom('from@example.com', 'Mailer');
+            $this->phpMailer->addAddress('joe@example.net', 'Joe User');
+
+            // Charset
+            $this->phpMailer->CharSet = PHPMailer::CHARSET_UTF8;
+        
+            // Content
+            $this->phpMailer->isHTML(true);
+            $this->phpMailer->Subject = 'Here is the subject';
+            $this->phpMailer->Body    = 'This is the HTML message body <b>in bold!</b>';
+            $this->phpMailer->AltBody = 'This is the body in plain text for non-HTML mail clients';
+        
+            $this->phpMailer->send();
+            echo 'Message has been sent';
+            return true;
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$this->phpMailer->ErrorInfo}";
+            return false;
+        }
     }
 
 }

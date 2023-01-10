@@ -14,6 +14,7 @@ class ComposerStaticInit603b4e001f50201d35e0aaeab05af7ea
         'P' => 
         array (
             'Psr\\Container\\' => 14,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'F' => 
         array (
@@ -29,6 +30,10 @@ class ComposerStaticInit603b4e001f50201d35e0aaeab05af7ea
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'Faker\\' => 
         array (
