@@ -18,7 +18,7 @@ class MailService
     }
 
 
-    public function send(): bool
+    public function send(array $data): bool
     {
         try {
             // Server settings
@@ -36,18 +36,24 @@ class MailService
 
             // Charset
             $this->phpMailer->CharSet = PHPMailer::CHARSET_UTF8;
+
+            // Get html content
+            ob_start();
+            require('src/template/MailTemplate.phtml');
+            $htmlBody = ob_get_clean();
+            echo $htmlBody;
+            exit;
         
             // Content
             $this->phpMailer->isHTML(true);
-            $this->phpMailer->Subject = 'Here is the subject';
-            $this->phpMailer->Body    = 'This is the HTML message body <b>in bold!</b>';
-            $this->phpMailer->AltBody = 'This is the body in plain text for non-HTML mail clients';
+            $this->phpMailer->Subject = "Contact by {$data['fullName']}";
+            $this->phpMailer->Body    = $htmlBody;
+            // $this->phpMailer->AltBody = 'This is the body in plain text for non-HTML mail clients';
         
             $this->phpMailer->send();
-            echo 'Message has been sent';
             return true;
         } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$this->phpMailer->ErrorInfo}";
+            // echo "Message could not be sent. Mailer Error: {$this->phpMailer->ErrorInfo}";
             return false;
         }
     }

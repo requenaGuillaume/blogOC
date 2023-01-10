@@ -23,17 +23,18 @@ final class HomepageController extends AbstractFormController implements FormInt
                 return $this->render('HomepageTemplate');
             }
 
+            $userId = $this->getUser()?->getId();
+
             $data = [
-                'firstName' => htmlspecialchars($_POST['firstName']),
-                'lastName' => htmlspecialchars($_POST['lastName']),
+                'fullName' => htmlspecialchars($_POST['firstName']).' '.htmlspecialchars($_POST['lastName']),
                 'email' => htmlspecialchars($_POST['email']),
-                'content' => htmlspecialchars($_POST['content'])
+                'content' => htmlspecialchars($_POST['content']),
+                'userId' => $userId
             ];
 
             $mailService = new MailService();
 
-            // if($mailService->send($data)){
-            if($mailService->send()){
+            if($mailService->send($data)){
                 $this->addFlash('success', 'Your message has been sent');
             }else{
                 $this->addFlash('danger', 'An error has occured, please try again');
